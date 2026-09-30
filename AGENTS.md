@@ -95,6 +95,87 @@ Do not bypass the system with one-off component recipes when the required concep
 
 For product UI, prefer visual structure over explanatory text. Do not add cards, eyebrow labels, badges, instructional paragraphs, invented metrics, or decorative framing unless they have a concrete job. Reuse the product's real spacing, typography, controls, status treatments, and density.
 
+## Repository placement policy
+
+The top-level layout is an ownership map, not a frozen package map. Every new file must have an owner before it has a path.
+
+Use these homes:
+
+```text
+ecosystem/
+├─ apps/
+│  └─ desktop/          Ecosystem's end-user desktop application
+├─ practice/            Practice-owned plugins, personalization, marketplace code
+├─ interface/           Interface-owned registry, engine, CLI, editor, and source
+├─ packages/            Proven libraries shared across top-level owners
+├─ tests/               Cross-owner integration and end-to-end tests only
+├─ docs/
+│  ├─ ecosystem/
+│  ├─ practice/
+│  └─ interface/
+├─ prototypes/          Disposable or explicitly experimental work
+└─ tooling/             Repository-wide development, build, and release tooling
+```
+
+Root configuration, workspace manifests, lockfiles, and repository policy files may remain at the repository root when they govern the whole monorepo.
+
+Choose a path in this order:
+
+1. User-facing Ecosystem application code belongs in `apps/desktop/`.
+2. Plugin distribution, plugin source, durable teaching, adaptation, reconciliation, and Practice-specific tooling belong in `practice/`.
+3. UI components, tokens, registry source, installation logic, theme tooling, and Interface-specific applications belong in `interface/`.
+4. A library used by more than one top-level owner may move to `packages/<name>/` only when it has a named responsibility and a real dependency boundary.
+5. Tests stay with the code they verify. Use root `tests/` only when the test spans top-level owners.
+6. Documentation belongs under `docs/<owner>/` unless it documents one package's private implementation and is clearer beside that package.
+7. Experiments that production code must not depend on belong under `prototypes/<topic>/`.
+8. Scripts that operate on one owner stay with that owner. Use root `tooling/` only for repository-wide automation.
+
+If none of these homes fit, stop and update the ownership map before creating another top-level directory.
+
+Within an owner, place code beside the concept that owns it. Prefer capability directories over generic technical buckets. Do not create catch-all `common`, `shared`, `core`, `lib`, `utils`, or `helpers` directories as a place to avoid choosing ownership.
+
+Do not create a package merely because new TypeScript needs a directory. Start inside the owning area and split a package when at least one of these is true:
+
+- it is a separately executable application or tool;
+- it needs a distinct runtime or dependency boundary;
+- two or more owners consume the same named contract;
+- it has an independently testable public API that callers should depend on instead of its internals;
+- an adopted existing project already has a proven package boundary that we are intentionally preserving.
+
+A package is an implementation boundary, not a category label.
+
+### Current owner defaults
+
+For the desktop app, start product capabilities under `apps/desktop/src/<capability>/`. Do not begin with global `components`, `hooks`, `utils`, or `services` buckets. A capability may own its UI, state, commands, tests, and adapters until a real boundary requires extraction.
+
+Practice starts with these default homes:
+
+```text
+practice/
+├─ plugins/             installable plugin and marketplace source
+├─ src/                 personalization, reconciliation, and marketplace behavior
+└─ tests/               Practice-wide integration tests
+```
+
+Do not migrate the old Agent Context Framework runtime wholesale. Move source into Practice only when it serves the current Practice design.
+
+Interface already has proven internal boundaries in the existing Frontend Lib repository. Preserve them initially under the Interface owner rather than scattering them across the monorepo:
+
+```text
+interface/
+├─ apps/
+│  └─ editor/
+├─ packages/
+│  ├─ cli/
+│  └─ engine/
+├─ registry/
+├─ tests/
+└─ vendor/
+   └─ tweakcn/
+```
+
+These are defaults, not permanent architecture. Change them in a bounded architecture workstream when the code gives us evidence for a better boundary.
+
 ## Repository and workstream discipline
 
 Preserve unrelated changes.

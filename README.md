@@ -131,22 +131,26 @@ These rules are easy to lose during implementation, so they are repository-level
 
 ## Repository shape
 
-The exact package boundaries are intentionally not frozen yet. The likely direction is:
+The repository has a default ownership map even though package boundaries may change:
 
 ```text
 ecosystem/
 ├─ apps/
-│  └─ ecosystem/
+│  └─ desktop/
+├─ practice/
+├─ interface/
 ├─ packages/
-│  ├─ practice/
-│  └─ interface/
+├─ tests/
 ├─ docs/
 ├─ prototypes/
+├─ tooling/
 ├─ AGENTS.md
 └─ README.md
 ```
 
-Do not create empty packages only to match this diagram. Add a boundary when real code or documentation gives it a reason to exist.
+`apps/desktop`, `practice`, and `interface` answer where work belongs. They do not require each area to remain one package. Root `packages` is reserved for libraries that are genuinely shared across those owners, and root `tests` is reserved for cross-owner integration tests.
+
+The detailed placement rules live in [AGENTS.md](./AGENTS.md). A new top-level directory requires an explicit change to that ownership map.
 
 ## Status
 

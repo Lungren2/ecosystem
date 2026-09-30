@@ -203,8 +203,21 @@ These are defaults rather than universal prohibitions. A component should exist 
 
 ## Repository integration
 
-An older proposal gave Frontend Lib its own monorepo with an editor app, CLI, engine, registry, tests, and fixtures.
+Interface lives under the top-level `interface/` ownership directory in Ecosystem.
 
-Ecosystem now provides the containing monorepo, so that old repository shape is reference material rather than a current directory contract.
+The existing Frontend Lib repository already has working boundaries for its editor app, CLI, engine, registry, tests, and vendored tweakcn reference. Preserve those boundaries during the initial migration:
 
-Create package boundaries only when implementation gives them a real owner.
+```text
+interface/
+├─ apps/
+│  └─ editor/
+├─ packages/
+│  ├─ cli/
+│  └─ engine/
+├─ registry/
+├─ tests/
+└─ vendor/
+   └─ tweakcn/
+```
+
+This is a placement default, not a promise that every boundary remains a separate package forever. Change it when implementation provides a concrete reason, not while deciding where an unrelated new file should go.

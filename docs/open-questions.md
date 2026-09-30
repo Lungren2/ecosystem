@@ -179,11 +179,11 @@ Old ACF skill directories are source material, not the package plan.
 
 The product name is Interface. The example `ui` namespace and final package/import names remain open.
 
-### Monorepo boundaries
+### Internal package boundaries
 
-The older standalone proposal used separate CLI and engine packages plus a registry and editor app.
+Interface has a fixed top-level owner at `interface/`. The initial migration should preserve the existing editor, CLI, engine, registry, tests, and vendored-source boundaries inside that owner.
 
-The Ecosystem monorepo may use different boundaries.
+Those internal boundaries may change as the implementation evolves. We have not decided which should remain separate packages long term.
 
 ### Registry format
 
