@@ -155,6 +155,8 @@ The detailed placement rules live in [AGENTS.md](./AGENTS.md). A new top-level d
 
 ## Status
 
-This repository is at the foundation stage. The immediate work is to capture the product thesis, architecture, interaction model, and project boundaries before implementation begins.
+The project model and repository ownership map are established. The root workspace scaffold manages Practice, Interface, and future shared packages with pnpm. The Code OSS desktop fork keeps its upstream toolchain and is intentionally not part of the root pnpm workspace.
+
+Runtime source has not been imported yet. Practice and Interface still need deliberate migration from their existing repositories, and the desktop needs a reproducible VS Code import baseline.
 
 Read [AGENTS.md](./AGENTS.md) before making changes.
