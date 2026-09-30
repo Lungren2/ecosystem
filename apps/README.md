@@ -2,8 +2,10 @@
 
 Application code lives under this owner.
 
-The planned desktop application is `apps/desktop/`, but that directory should not be populated piecemeal. It is reserved for a reproducible Code OSS / VS Code fork import.
+The desktop application is reserved at `apps/desktop/` for the complete Code OSS / VS Code baseline.
 
-Until that import happens, desktop architecture belongs in `docs/ecosystem/desktop.md`.
+The initial upstream commit and tree are pinned in `tooling/desktop/upstream.env`. Import the full tree with `tooling/desktop/import-code-oss.sh`; do not populate the directory piecemeal.
+
+Desktop architecture belongs in `docs/ecosystem/desktop.md`.
 
 Do not create another application under `apps/` without first updating the root ownership map in `AGENTS.md`.

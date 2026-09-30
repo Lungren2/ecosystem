@@ -12,7 +12,9 @@ The old Monaco/Tauri prototype remains useful evidence for keyboard and persiste
 
 The desktop fork comes from [microsoft/vscode](https://github.com/microsoft/vscode), which is MIT licensed.
 
-The architecture review on 2026-09-30 inspected VS Code `main` around commit `d6b3034499d6039992da597d2290c71aefcf8ae5`. That commit is a reference point, not yet the selected import baseline.
+The initial desktop baseline is pinned to VS Code commit `d6b3034499d6039992da597d2290c71aefcf8ae5` with tree `e2b1301313528bd8ceaa217abe50b20f9d35e2ef`.
+
+That commit is the code reviewed during the 2026-09-30 architecture work, including the current workspace-transition and sessions code. Pinning the reviewed commit keeps the first fork baseline aligned with the architecture evidence we used.
 
 One existing seam matters immediately: `NativeWorkspaceEditingService.enterWorkspace()` already performs an in-window workspace transition that stops extension hosts, switches workspace configuration and storage, reinitializes working-copy backups, runs workspace transition participants, and restarts extension hosts.
 
@@ -162,4 +164,6 @@ When changing existing VS Code behavior, edit the upstream subsystem that owns i
 
 Do not move upstream code into a new Ecosystem-specific tree merely to make the fork look cleaner. A recognizable upstream layout makes review and future synchronization easier.
 
-The initial import method and exact upstream baseline remain separate decisions. Do not copy a partial VS Code tree into the monorepo as a substitute for a reproducible fork-import process.
+The initial import uses a squashed Git subtree under `apps/desktop/`. The import contract lives in `tooling/desktop/`.
+
+The baseline commit must contain the complete upstream tree with no Ecosystem product edits inside `apps/desktop/`. Later desktop changes build on that known baseline. Do not copy a partial VS Code tree or replace the subtree with a submodule.
