@@ -4,6 +4,18 @@ Ecosystem is the monorepo for Eco, Agent Context Framework, and Frontend Lib.
 
 The repository starts with documentation because the ideas are still changing quickly. The first job is to preserve the distinctions that matter so implementation does not collapse them into a familiar but weaker product.
 
+## Documentation
+
+The detailed project model lives in [docs](./docs/README.md):
+
+- [Eco architecture](./docs/eco/architecture.md)
+- [Eco interface](./docs/eco/interface.md)
+- [Agent Context Framework](./docs/acf/README.md)
+- [Frontend Lib](./docs/frontend-lib/README.md)
+- [Open questions](./docs/open-questions.md)
+
+The root README stays compact. When a detailed document and an old chat summary disagree, use the detailed document until a later decision changes it.
+
 ## Projects
 
 ### Eco

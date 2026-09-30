@@ -10,6 +10,16 @@ Do not infer that familiar terms mean familiar architecture. Eco, ACF, and Front
 
 When a concept changes, update the documentation that defines it in the same workstream. Do not leave an obsolete thesis behind working code.
 
+Canonical concept owners:
+
+- `docs/eco/architecture.md` owns the Eco runtime and cognition model.
+- `docs/eco/interface.md` owns the desktop shell, groups, thread rail, panes, and spatial navigation.
+- `docs/acf/README.md` owns the current ACF marketplace and personalization model.
+- `docs/frontend-lib/README.md` owns the Frontend Lib design direction.
+- `docs/open-questions.md` records choices that are deliberately unresolved.
+
+If a needed choice is still in `docs/open-questions.md`, do not silently resolve it as part of unrelated implementation work.
+
 ## Keep the three projects distinct
 
 ### Eco
