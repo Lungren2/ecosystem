@@ -157,6 +157,6 @@ The detailed placement rules live in [AGENTS.md](./AGENTS.md). A new top-level d
 
 The project model and repository ownership map are established. The root workspace scaffold manages Practice, Interface, and future shared packages with pnpm. The Code OSS desktop fork keeps its upstream toolchain and is intentionally not part of the root pnpm workspace.
 
-Runtime source has not been imported yet. Practice and Interface still need deliberate migration from their existing repositories, and the desktop needs a reproducible VS Code import baseline.
+Runtime source has not been imported yet. The first Code OSS baseline is pinned and its subtree import is defined under `tooling/desktop/`. Practice and Interface still need deliberate migration from their existing repositories.
 
 Read [AGENTS.md](./AGENTS.md) before making changes.
