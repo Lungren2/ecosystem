@@ -118,13 +118,7 @@ No learning system is selected.
 
 Local session facts must stay separate from generalized behavior.
 
-## Agent Context Framework
-
-### Replacement name for Agent Context Framework
-
-"Agent Context Framework" and "ACF" are working names and should be replaced. The new name should fit the current product: an OpenAI-native plugin marketplace plus durable teaching, scoped adaptation, provenance, and semantic reconciliation across upstream updates.
-
-Do not pick a name that implies the old custom runtime is still the product.
+## Practice
 
 
 ### Plugin packaging
@@ -179,11 +173,11 @@ We have not decided whether the initial marketplace contains a small number of b
 
 Old ACF skill directories are source material, not the package plan.
 
-## Frontend Lib
+## Interface
 
-### Final package name and public import
+### Public import and namespace
 
-"Frontend Lib" and the example ui namespace are working names.
+The product name is Interface. The example `ui` namespace and final package/import names remain open.
 
 ### Monorepo boundaries
 
@@ -222,14 +216,14 @@ We have not chosen which project provides the first executable slice of Ecosyste
 Likely candidates include:
 
 - an Ecosystem shell that proves groups, thread rail, and spatial pane navigation;
-- an ACF plugin personalization prototype;
-- a minimal Frontend Lib foundation needed to build the Ecosystem shell.
+- a Practice plugin personalization prototype;
+- a minimal Interface foundation needed to build the Ecosystem shell.
 
 The choice should prove a risky product assumption rather than maximize initial code volume.
 
 ### Shared persistence
 
-Ecosystem, ACF personalization, and desktop workspace state all need persistence, but they do not necessarily need one database or schema.
+Ecosystem, Practice personalization, and desktop workspace state all need persistence, but they do not necessarily need one database or schema.
 
 Do not unify storage simply because the projects share a monorepo.
 

@@ -1,14 +1,12 @@
-# Frontend Lib
+# Interface
 
 ## Purpose
 
-Frontend Lib is the response to a repeated problem: capable models can write frontend code quickly while repeatedly choosing generic interface patterns that do not match the product.
+Interface is the response to a repeated problem: capable models can write frontend code quickly while repeatedly choosing generic interface patterns that do not match the product.
 
 It is intended as a personal replacement for shadcn/ui and as the default interface system for Ecosystem.
 
 The goal is to make the desired frontend easier for both humans and agents to author by narrowing the vocabulary, centralizing visual decisions, and keeping source ownership inside the application.
-
-"Frontend Lib" is a working name.
 
 ## Current direction
 
@@ -34,7 +32,7 @@ Example:
 
 The public vocabulary should feel closer to HTML than to a PascalCase component catalog.
 
-Base UI stays internal. Product screens should normally import the Frontend Lib layer rather than assemble Base UI portals, positioners, triggers, and popups directly.
+Base UI stays internal. Product screens should normally import the Interface layer rather than assemble Base UI portals, positioners, triggers, and popups directly.
 
 Advanced escape hatches can exist for cases that genuinely need lower-level composition. They should not define the normal authoring experience.
 
@@ -52,7 +50,7 @@ That does not mean every screen should look identical. It means recurring contro
 
 ## Source ownership
 
-Frontend Lib keeps the useful part of the shadcn model: installed component source belongs to the consuming application and remains editable.
+Interface keeps the useful part of the shadcn model: installed component source belongs to the consuming application and remains editable.
 
 The CLI must therefore know which files it installed and whether the user changed them.
 
@@ -164,7 +162,7 @@ The intended adoption process was:
 1. run the upstream editor unchanged and prove its useful flows;
 2. record externally observable behavior;
 3. create a local functional replica with source provenance;
-4. replace its preview and token adapters with Frontend Lib's registry and engine.
+4. replace its preview and token adapters with Interface's registry and engine.
 
 The useful behavior includes token editing, live preview, import/export, persistence, keyboard interaction, and failure states.
 
@@ -176,11 +174,11 @@ If we adopt it later, preserve the source commit, license obligations, notices, 
 
 Ecosystem needs browser, editor, terminal, conversation, work-graph, evidence, navigation, and many other views to feel like one product.
 
-Frontend Lib is how those views share the same spacing, type, controls, focus behavior, state treatment, and density while remaining editable.
+Interface is how those views share the same spacing, type, controls, focus behavior, state treatment, and density while remaining editable.
 
 It also gives coding agents an intentionally constrained authoring vocabulary.
 
-Ecosystem should not build a parallel private component system unless a concrete requirement cannot belong in Frontend Lib.
+Ecosystem should not build a parallel private component system unless a concrete requirement cannot belong in Interface.
 
 ## Agent-first does not mean agent-only
 
@@ -192,7 +190,7 @@ It should not require generated code, special model metadata, or an interface th
 
 ## Product UI discipline
 
-The UI discussions establish several defaults for Ecosystem and Frontend Lib:
+The UI discussions establish several defaults for Ecosystem and Interface:
 
 - visual structure is preferable to explanatory prose when structure can communicate the same thing;
 - titles and instructional subtitles should not appear by default;

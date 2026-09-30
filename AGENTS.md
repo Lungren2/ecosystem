@@ -6,7 +6,7 @@ These instructions apply to the whole monorepo unless a deeper `AGENTS.md` narro
 
 Read `README.md` before changing architecture or product behavior. Read the nearest package instructions and the documents that own the concept you are modifying.
 
-Do not infer that familiar terms mean familiar architecture. Ecosystem (Eco), Agent Context Framework (working name), and Frontend Lib (working name) intentionally reject several common agent and frontend defaults.
+Do not infer that familiar terms mean familiar architecture. Ecosystem (Eco), Practice, and Interface intentionally reject several common agent and frontend defaults.
 
 When a concept changes, update the documentation that defines it in the same workstream. Do not leave an obsolete thesis behind working code.
 
@@ -14,8 +14,8 @@ Canonical concept owners:
 
 - `docs/ecosystem/architecture.md` owns the Ecosystem runtime and cognition model.
 - `docs/ecosystem/interface.md` owns the desktop shell, groups, thread rail, panes, and spatial navigation.
-- `docs/acf/README.md` owns the current ACF marketplace and personalization model.
-- `docs/frontend-lib/README.md` owns the Frontend Lib design direction.
+- `docs/practice/README.md` owns the Practice marketplace and personalization model.
+- `docs/interface/README.md` owns the Interface design direction.
 - `docs/open-questions.md` records choices that are deliberately unresolved.
 
 If a needed choice is still in `docs/open-questions.md`, do not silently resolve it as part of unrelated implementation work.
@@ -53,13 +53,13 @@ A group is a shared event stream. Agents may have private continuity outside the
 
 When runtime work begins, prefer canonical events and provenance over destructive memory rewriting. Summaries and indexes may be disposable. Original evidence should remain recoverable.
 
-### Agent Context Framework
+### Practice
 
-ACF is moving toward an OpenAI plugin marketplace and personalization system.
+Practice is the OpenAI plugin marketplace and personalization system.
 
 Do not revive the old custom orchestration runtime by default. Before adding execution, scheduling, context-compaction, generic subagent, or cloud-runtime machinery, check whether the OpenAI host already owns that responsibility.
 
-ACF's differentiated responsibilities are:
+Practice's differentiated responsibilities are:
 
 - plugin distribution and provenance
 - durable natural-language feedback
@@ -75,9 +75,9 @@ Do not edit a managed plugin cache as the personalization mechanism. Avoid perma
 
 Current explicit user instruction has the highest precedence.
 
-### Frontend Lib
+### Interface
 
-Frontend Lib is the UI system for model-authored product work and the intended interface foundation for Ecosystem.
+Interface is the UI system for model-authored product work and the intended interface foundation for Ecosystem.
 
 Prefer its public vocabulary over direct use of underlying UI libraries once the package exists.
 
@@ -91,7 +91,7 @@ The current direction is:
 - Installed source remains application-owned and editable.
 - The CLI must understand ownership, drift, removal, configuration, and upgrades.
 
-Do not bypass the system with one-off component recipes when the required concept belongs in Frontend Lib.
+Do not bypass the system with one-off component recipes when the required concept belongs in Interface.
 
 For product UI, prefer visual structure over explanatory text. Do not add cards, eyebrow labels, badges, instructional paragraphs, invented metrics, or decorative framing unless they have a concrete job. Reuse the product's real spacing, typography, controls, status treatments, and density.
 

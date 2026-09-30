@@ -296,4 +296,4 @@ Earlier Eco notes placed ACF below the Eco runtime as the component responsible 
 
 That is now historical project organization.
 
-The ideas remain relevant to Eco, but the current ACF direction is a plugin marketplace and personalization system. Eco should own the runtime concepts it still needs instead of requiring the old ACF runtime as a separate layer.
+The ideas remain relevant to Ecosystem, but the current Practice direction is a plugin marketplace and personalization system. Ecosystem should own the runtime concepts it still needs instead of requiring the old ACF runtime as a separate layer.

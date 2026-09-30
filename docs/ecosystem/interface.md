@@ -15,7 +15,7 @@ Do not merge those into one project tree.
 A rough shell:
 
     +--------------+--------------------------------------------------------------+
-    |              | [ Eco ] [ ACF ] [ test-env ] [ Research ]                + |
+    |              | [ Eco ] [ Practice ] [ test-env ] [ Research ]                + |
     | THREADS      +--------------------------------------------------------------+
     |              |                                                              |
     | Sol          |  +------------+ +------------------+ +--------------------+  |
@@ -114,7 +114,7 @@ When the user moves away:
     ATTENTION                 STATE
 
     Eco visible              running
-    ACF hidden               running
+    Practice hidden          running
     test-env hidden          running
     Research hidden          participants may still work
 

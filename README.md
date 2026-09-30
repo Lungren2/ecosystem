@@ -1,6 +1,6 @@
 # Ecosystem
 
-Ecosystem is the product and monorepo. Eco is its short name. The repository also contains two currently provisional components: Agent Context Framework and Frontend Lib.
+Ecosystem is the product and monorepo. Eco is its short name. Practice is its agent-behavior marketplace and personalization system. Interface is its source-owned UI system.
 
 The repository starts with documentation because the ideas are still changing quickly. The first job is to preserve the distinctions that matter so implementation does not collapse them into a familiar but weaker product.
 
@@ -10,8 +10,8 @@ The detailed project model lives in [docs](./docs/README.md):
 
 - [Ecosystem architecture](./docs/ecosystem/architecture.md)
 - [Ecosystem interface](./docs/ecosystem/interface.md)
-- [Agent Context Framework](./docs/acf/README.md)
-- [Frontend Lib](./docs/frontend-lib/README.md)
+- [Practice](./docs/practice/README.md)
+- [Interface](./docs/interface/README.md)
 - [Open questions](./docs/open-questions.md)
 
 The root README stays compact. When a detailed document and an old chat summary disagree, use the detailed document until a later decision changes it.
@@ -32,7 +32,7 @@ A rough shell:
 
 ```text
 ┌──────────────┬──────────────────────────────────────────────────────────────┐
-│              │ [ Group: Eco ] [ ACF ] [ test-env ] [ Research ]       +  │
+│              │ [ Group: Eco ] [ Practice ] [ test-env ] [ Research ]       +  │
 │ THREADS      ├──────────────────────────────────────────────────────────────┤
 │              │                                                              │
 │ ● Sol        │   ┌──────────────┐ ┌──────────────────┐ ┌────────────────┐  │
@@ -56,11 +56,11 @@ The current Ecosystem thesis keeps several structures separate:
 
 A model activation is not an agent. A work item is not automatically a subagent. A group is not a shared model context. A pane is not a lifecycle boundary.
 
-### Agent Context Framework
+### Practice
 
-ACF is being rethought as an OpenAI-native plugin marketplace and personalization layer.
+Practice is an OpenAI-native plugin marketplace and personalization layer.
 
-The useful part is not another generic agent runtime. OpenAI can increasingly own model execution, sessions, tools, cloud environments, and ordinary orchestration. ACF should concentrate on distributing behavior and letting people teach installed plugins over time.
+The useful part is not another generic agent runtime. OpenAI can increasingly own model execution, sessions, tools, cloud environments, and ordinary orchestration. Practice should concentrate on distributing behavior and letting people teach installed plugins over time.
 
 The core personalization model is:
 
@@ -76,7 +76,7 @@ effective behavior
 
 Raw user feedback is durable evidence. The synthesized adaptation is disposable and can be regenerated.
 
-When a plugin updates, ACF should reconcile the new upstream behavior with the user's original intent. This is a semantic rebase, not a text patch. An upstream change may satisfy an old preference, conflict with it, make it obsolete, or require clarification.
+When a plugin updates, Practice should reconcile the new upstream behavior with the user's original intent. This is a semantic rebase, not a text patch. An upstream change may satisfy an old preference, conflict with it, make it obsolete, or require clarification.
 
 Durable personalization must be explicit. A one-off correction should not silently become permanent policy.
 
@@ -98,9 +98,9 @@ The current conversation wins.
 
 OpenAI plugin documentation: <https://developers.openai.com/plugins/build/plugins>
 
-### Frontend Lib
+### Interface
 
-Frontend Lib exists because general-purpose models tend to regress toward generic frontend patterns even when the product requires a stronger visual language.
+Interface exists because general-purpose models tend to regress toward generic frontend patterns even when the product requires a stronger visual language.
 
 It is a source-owned UI system intended as a personal replacement for shadcn/ui. The direction is:
 
@@ -113,7 +113,7 @@ It is a source-owned UI system intended as a personal replacement for shadcn/ui.
 - Installed component source belongs to the application and remains editable.
 - The CLI treats installation, removal, drift, configuration, and upgrades as system operations rather than isolated file copies.
 
-Frontend Lib should make the preferred interface easier for both humans and agents to produce. Ecosystem should use it rather than building a parallel set of ad hoc components.
+Interface should make the preferred interface easier for both humans and agents to produce. Ecosystem should use it rather than building a parallel set of ad hoc components.
 
 ## Shared design rules
 
@@ -124,7 +124,7 @@ These rules are easy to lose during implementation, so they are repository-level
 3. Canonical evidence should remain recoverable. Summaries, indexes, working state, and active context may be rebuilt.
 4. Conversation is an interface and an event stream, not the entire execution model.
 5. Prefer familiar interaction before exposing internal agent architecture.
-6. ACF should not rebuild commodity execution infrastructure without a concrete reason.
+6. Practice should not rebuild commodity execution infrastructure without a concrete reason.
 7. Plugin personalization should look like teaching, not a settings matrix.
 8. Frontend implementation should use the product's actual design system. Do not let generic cards, badges, explanatory copy, or dashboard patterns appear by default.
 9. One branch should contain one application reality. Prefer separate branches over runtime flags or compatibility modes for incompatible product states.
@@ -138,8 +138,8 @@ ecosystem/
 ├─ apps/
 │  └─ ecosystem/
 ├─ packages/
-│  ├─ acf/
-│  └─ frontend-lib/
+│  ├─ practice/
+│  └─ interface/
 ├─ docs/
 ├─ prototypes/
 ├─ AGENTS.md

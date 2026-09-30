@@ -1,14 +1,12 @@
-# Agent Context Framework
+# Practice
 
 ## Current direction
 
-The name "Agent Context Framework" is provisional. A replacement name has not been chosen.
+Practice is the successor to the Agent Context Framework (ACF) project and is being redesigned around OpenAI plugins.
 
-Agent Context Framework is being redesigned around OpenAI plugins.
+Practice is not primarily a model runtime. It is a way to distribute agent behavior, let users teach that behavior over time, and carry those teachings across upstream plugin updates without permanently forking the plugin.
 
-The new ACF is not primarily a model runtime. It is a way to distribute agent behavior, let users teach that behavior over time, and carry those teachings across upstream plugin updates without permanently forking the plugin.
-
-The distribution mechanism is an OpenAI plugin marketplace. The differentiated ACF behavior is personalization.
+The distribution mechanism is an OpenAI plugin marketplace. Practice's differentiated behavior is personalization.
 
 OpenAI plugin documentation discussed during the design work: https://developers.openai.com/plugins/build/plugins
 
@@ -29,9 +27,9 @@ One part is valuable learned behavior:
 
 The other part is a substantial custom execution system with objective scheduling, durable orchestration, workflow runtimes, persistence, budgets, leases, task envelopes, and related infrastructure.
 
-The current direction is to keep the first category and stop treating the second category as the reason ACF must exist.
+The current direction is to keep the first category and stop treating the second category as the reason Practice must exist.
 
-OpenAI increasingly owns generic model execution, sessions, tools, cloud execution, and ordinary agent orchestration. ACF should only add runtime machinery when a concrete requirement remains unsolved by the host.
+OpenAI increasingly owns generic model execution, sessions, tools, cloud execution, and ordinary agent orchestration. Practice should only add runtime machinery when a concrete requirement remains unsolved by the host.
 
 The old runtime code is useful research material. It should not silently become the architecture of the new monorepo.
 
@@ -46,7 +44,7 @@ Agent behavior is mostly natural-language policy. Users often need to say things
     In this situation, use X instead.
     The new behavior is better. Keep it.
 
-ACF should preserve those corrections as durable teaching rather than force them into a fixed settings matrix.
+Practice should preserve those corrections as durable teaching rather than force them into a fixed settings matrix.
 
 ## Three forms of state
 
@@ -65,7 +63,7 @@ The feedback log is durable evidence.
 
 The synthesized adaptation is replaceable. If synthesis is poor, a newer model or reconciliation process can regenerate it from the original feedback.
 
-This is the same evidence-versus-interpretation distinction that appears elsewhere in Ecosystem, but ACF applies it specifically to learned behavior.
+This is the same evidence-versus-interpretation distinction that appears elsewhere in Ecosystem, but Practice applies it specifically to learned behavior.
 
 ## Feedback should preserve intent
 
@@ -146,7 +144,7 @@ Suppose a user taught version 1.4 of a plugin to prefer dense tables over cards 
 
 Version 2.0 may already encode that behavior.
 
-ACF should reconcile:
+Practice should reconcile:
 
     OLD UPSTREAM
          |
@@ -212,7 +210,7 @@ The final plugin boundaries are not decided. Do not create one plugin per old di
 
 ## Historical context layer
 
-Earlier Eco architecture work used the name ACF for a lower runtime layer responsible for:
+Earlier Ecosystem architecture work used the name ACF for a lower runtime layer responsible for:
 
 - active-context projection;
 - working-state materialization;
@@ -223,23 +221,23 @@ Earlier Eco architecture work used the name ACF for a lower runtime layer respon
 
 That project boundary is historical.
 
-Those ideas now belong with Eco's runtime architecture unless a later decision deliberately extracts a reusable package.
+Those ideas now belong with Ecosystem's runtime architecture unless a later decision deliberately extracts a reusable package.
 
-Do not use the old ACF name as evidence that Eco must depend on an ACF context runtime.
+Do not use the old ACF name as evidence that Ecosystem must depend on an ACF context runtime.
 
-## What ACF does not need to prove
+## What Practice does not need to prove
 
-ACF does not need to be provider-neutral for its own sake.
+Practice does not need to be provider-neutral for its own sake.
 
 The current direction is explicitly OpenAI-native because the project is informed by repeated GPT and Codex use and because OpenAI's plugin model now provides the distribution mechanism being targeted.
 
 That may change later, but provider abstraction is not a current requirement.
 
-Likewise, portable ChatGPT-funded inference was discussed as a commercially interesting possibility for Eco and third-party software. It is not an ACF architecture requirement and should not be assumed until the developer contract is known.
+Likewise, portable ChatGPT-funded inference was discussed as a commercially interesting possibility for Eco and third-party software. It is not a Practice architecture requirement and should not be assumed until the developer contract is known.
 
 ## First implementation target
 
-The smallest useful ACF experiment should test the personalization model rather than recreate the old runtime.
+The smallest useful Practice experiment should test the personalization model rather than recreate the old runtime.
 
 A good prototype would prove:
 
