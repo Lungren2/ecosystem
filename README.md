@@ -10,6 +10,7 @@ The detailed project model lives in [docs](./docs/README.md):
 
 - [Ecosystem architecture](./docs/ecosystem/architecture.md)
 - [Ecosystem interface](./docs/ecosystem/interface.md)
+- [Desktop foundation](./docs/ecosystem/desktop.md)
 - [Practice](./docs/practice/README.md)
 - [Interface](./docs/interface/README.md)
 - [Open questions](./docs/open-questions.md)
@@ -136,7 +137,7 @@ The repository has a default ownership map even though package boundaries may ch
 ```text
 ecosystem/
 ├─ apps/
-│  └─ desktop/
+│  └─ desktop/          Code OSS / VS Code fork
 ├─ practice/
 ├─ interface/
 ├─ packages/

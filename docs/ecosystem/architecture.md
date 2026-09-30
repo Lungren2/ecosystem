@@ -19,6 +19,10 @@ The strongest recurring rule in the design is that related structures must not b
     agent              != holon
     agent              != group
     group              != shared model context
+    ProjectSession     != group
+    ProjectSession     != thread
+    ProjectSession     != pane
+    ProjectSession     != holon
     conversation graph != work graph
     work decomposition != organisational differentiation
     pane visibility    != lifecycle
@@ -26,6 +30,12 @@ The strongest recurring rule in the design is that related structures must not b
 Earlier notes described the persistent agent as a wholarchy of durable local worlds. Later discussion sharpened that wording. A holon is a durable local world with scope and authority. It is not itself a model call, chat thread, group, or necessarily the same thing as a user-visible agent identity.
 
 The exact product-level relationship between agent identity and holons remains open. The distinction itself is current direction.
+
+A ProjectSession is the hydrated machine context for one VS Code workspace. It owns workspace-scoped runtime state such as extension hosts, language servers, file watchers, SCM models, terminals, tasks, debug sessions, editor working sets, and project-scoped AI state. It is not a social or cognitive identity.
+
+Normal operation should have one active ProjectSession. Inactive projects retain serialized data and lightweight metadata rather than live runtime objects. Group switching only triggers a ProjectSession transition when the selected work crosses a project boundary.
+
+See [Desktop foundation](./desktop.md) for the lifecycle and fork policy.
 
 ## Work map, wholarchy, and activations
 

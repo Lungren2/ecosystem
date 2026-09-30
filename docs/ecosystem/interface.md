@@ -10,7 +10,7 @@ The shell has three different navigation concerns:
 2. The spatial workplane chooses what the user is attending to inside that context.
 3. The thread rail chooses who the user is talking to or inspecting.
 
-Do not merge those into one project tree.
+ProjectSession is a separate machine-context concern beneath those navigation systems. Do not merge groups, threads, panes, and project runtimes into one project tree.
 
 A rough shell:
 
@@ -121,6 +121,16 @@ When the user moves away:
 Changing attention should not imply destruction.
 
 This principle applies at several levels. A pane can be off-screen, a group can be inactive, and a thread can be closed while their underlying durable state still exists.
+
+## Project sessions
+
+A ProjectSession is the active VS Code workspace runtime. It is not a group tab.
+
+Several groups may refer to the same project. A group may also discuss work that spans more than one project. Switching groups should therefore remain cheap when the underlying ProjectSession does not change.
+
+When work crosses a project boundary, Ecosystem can perform the heavier ProjectSession transition while preserving the selected group's conversational state.
+
+The workbench may expose the active project near the status or command area, but project selection must not replace the group tab model.
 
 ## Groups
 

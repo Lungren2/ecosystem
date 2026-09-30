@@ -51,13 +51,25 @@ Eco wants Niri-like geometric navigation, but exact bindings are not chosen.
 
 Group switching needs a separate cheap action.
 
-### Desktop technology
+### Desktop fork maintenance
 
-The current product requires a serious browser, editor, terminal, split-screen, background processes, and persistent desktop state.
+The desktop is a Code OSS / VS Code fork. The old Monaco/Tauri prototype remains evidence for interaction behavior, not the application base.
 
-Tauri, Electron, native webviews, Monaco, CodeMirror, xterm, and terminal backends have not been selected for the new implementation.
+The initial fork work still needs to decide:
 
-The old Monaco/Tauri prototype is evidence for interaction behavior, not a technology decision.
+- which upstream VS Code commit becomes the first imported baseline;
+- how upstream updates are imported and reviewed;
+- how Ecosystem-specific patches remain easy to distinguish from upstream code;
+- how product branding and build configuration are maintained;
+- when remote-authority switching becomes part of ProjectSession activation.
+
+Do not replace the VS Code fork with a separate desktop stack during unrelated implementation work.
+
+### ProjectSession suspension policy
+
+Local project switching is the first target. We still need exact policies for terminal recreation, extension-spawned child processes, task and debug teardown, chat-session isolation, leak detection, and failure rollback.
+
+Inactive ProjectSessions should own serialized state, not live project-owned runtime processes, except for behavior explicitly classified as keep-alive.
 
 ### Canonical event store
 

@@ -14,6 +14,7 @@ Canonical concept owners:
 
 - `docs/ecosystem/architecture.md` owns the Ecosystem runtime and cognition model.
 - `docs/ecosystem/interface.md` owns the desktop shell, groups, thread rail, panes, and spatial navigation.
+- `docs/ecosystem/desktop.md` owns the Code OSS fork, ProjectSession lifecycle, and upstream-workbench policy.
 - `docs/practice/README.md` owns the Practice marketplace and personalization model.
 - `docs/interface/README.md` owns the Interface design direction.
 - `docs/open-questions.md` records choices that are deliberately unresolved.
@@ -45,6 +46,10 @@ Preserve these architectural distinctions:
 - activation != agent
 - work item != subagent
 - group != shared model context
+- ProjectSession != group
+- ProjectSession != thread
+- ProjectSession != pane
+- ProjectSession != holon
 - conversation graph != work graph
 - canonical event log != working graph
 - working graph != active context
@@ -104,7 +109,7 @@ Use these homes:
 ```text
 ecosystem/
 ├─ apps/
-│  └─ desktop/          Ecosystem's end-user desktop application
+│  └─ desktop/          Code OSS / VS Code fork for the Ecosystem desktop
 ├─ practice/            Practice-owned plugins, personalization, marketplace code
 ├─ interface/           Interface-owned registry, engine, CLI, editor, and source
 ├─ packages/            Proven libraries shared across top-level owners
@@ -121,7 +126,7 @@ Root configuration, workspace manifests, lockfiles, and repository policy files 
 
 Choose a path in this order:
 
-1. User-facing Ecosystem application code belongs in `apps/desktop/`.
+1. User-facing Ecosystem desktop code belongs in `apps/desktop/`, which preserves the Code OSS / VS Code repository structure.
 2. Plugin distribution, plugin source, durable teaching, adaptation, reconciliation, and Practice-specific tooling belong in `practice/`.
 3. UI components, tokens, registry source, installation logic, theme tooling, and Interface-specific applications belong in `interface/`.
 4. A library used by more than one top-level owner may move to `packages/<name>/` only when it has a named responsibility and a real dependency boundary.
@@ -146,7 +151,17 @@ A package is an implementation boundary, not a category label.
 
 ### Current owner defaults
 
-For the desktop app, start product capabilities under `apps/desktop/src/<capability>/`. Do not begin with global `components`, `hooks`, `utils`, or `services` buckets. A capability may own its UI, state, commands, tests, and adapters until a real boundary requires extraction.
+The desktop app is a Code OSS / VS Code fork. Preserve upstream directory ownership so upstream code remains recognizable and future updates stay reviewable.
+
+When changing existing VS Code behavior, edit the upstream subsystem that owns it. When Ecosystem adds a new workbench capability with no upstream owner, place it by VS Code convention:
+
+- lifecycle, state, and reusable workbench services belong under `apps/desktop/src/vs/workbench/services/<capability>/`;
+- user-facing workbench contributions belong under `apps/desktop/src/vs/workbench/contrib/<capability>/`;
+- platform-level code belongs under `apps/desktop/src/vs/platform/<capability>/` only when it is genuinely below the workbench layer.
+
+Do not create a catch-all `src/vs/ecosystem` tree. Do not reorganize upstream files merely to match the rest of this monorepo. Keep the desktop fork's upstream package manager and build layout intact unless a dedicated migration workstream changes them.
+
+ProjectSession lifecycle code defaults to `apps/desktop/src/vs/workbench/services/projectSessions/`. Project-session chrome and commands default to `apps/desktop/src/vs/workbench/contrib/projectSessions/`.
 
 Practice starts with these default homes:
 
