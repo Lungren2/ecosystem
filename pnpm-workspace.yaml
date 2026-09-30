@@ -1,0 +1,10 @@
+# apps/desktop is intentionally excluded. The Code OSS fork keeps its upstream npm/build toolchain.
+packages:
+  - "practice"
+  - "practice/packages/*"
+  - "practice/tools/*"
+  - "interface/apps/*"
+  - "interface/packages/*"
+  - "interface/registry"
+  - "interface/tests"
+  - "packages/*"
