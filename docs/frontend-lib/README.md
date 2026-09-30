@@ -4,7 +4,7 @@
 
 Frontend Lib is the response to a repeated problem: capable models can write frontend code quickly while repeatedly choosing generic interface patterns that do not match the product.
 
-It is intended as a personal replacement for shadcn/ui and as the default interface system for Eco.
+It is intended as a personal replacement for shadcn/ui and as the default interface system for Ecosystem.
 
 The goal is to make the desired frontend easier for both humans and agents to author by narrowing the vocabulary, centralizing visual decisions, and keeping source ownership inside the application.
 
@@ -172,15 +172,15 @@ This remains a historical implementation proposal, not a requirement that Ecosys
 
 If we adopt it later, preserve the source commit, license obligations, notices, and modification provenance.
 
-## Relationship to Eco
+## Relationship to Ecosystem
 
-Eco needs browser, editor, terminal, conversation, work-graph, evidence, navigation, and many other views to feel like one product.
+Ecosystem needs browser, editor, terminal, conversation, work-graph, evidence, navigation, and many other views to feel like one product.
 
 Frontend Lib is how those views share the same spacing, type, controls, focus behavior, state treatment, and density while remaining editable.
 
 It also gives coding agents an intentionally constrained authoring vocabulary.
 
-Eco should not build a parallel private component system unless a concrete requirement cannot belong in Frontend Lib.
+Ecosystem should not build a parallel private component system unless a concrete requirement cannot belong in Frontend Lib.
 
 ## Agent-first does not mean agent-only
 
@@ -192,7 +192,7 @@ It should not require generated code, special model metadata, or an interface th
 
 ## Product UI discipline
 
-The UI discussions establish several defaults for Eco and Frontend Lib:
+The UI discussions establish several defaults for Ecosystem and Frontend Lib:
 
 - visual structure is preferable to explanatory prose when structure can communicate the same thing;
 - titles and instructional subtitles should not appear by default;

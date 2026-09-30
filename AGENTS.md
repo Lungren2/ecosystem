@@ -6,14 +6,14 @@ These instructions apply to the whole monorepo unless a deeper `AGENTS.md` narro
 
 Read `README.md` before changing architecture or product behavior. Read the nearest package instructions and the documents that own the concept you are modifying.
 
-Do not infer that familiar terms mean familiar architecture. Eco, ACF, and Frontend Lib intentionally reject several common agent and frontend defaults.
+Do not infer that familiar terms mean familiar architecture. Ecosystem (Eco), Agent Context Framework (working name), and Frontend Lib (working name) intentionally reject several common agent and frontend defaults.
 
 When a concept changes, update the documentation that defines it in the same workstream. Do not leave an obsolete thesis behind working code.
 
 Canonical concept owners:
 
-- `docs/eco/architecture.md` owns the Eco runtime and cognition model.
-- `docs/eco/interface.md` owns the desktop shell, groups, thread rail, panes, and spatial navigation.
+- `docs/ecosystem/architecture.md` owns the Ecosystem runtime and cognition model.
+- `docs/ecosystem/interface.md` owns the desktop shell, groups, thread rail, panes, and spatial navigation.
 - `docs/acf/README.md` owns the current ACF marketplace and personalization model.
 - `docs/frontend-lib/README.md` owns the Frontend Lib design direction.
 - `docs/open-questions.md` records choices that are deliberately unresolved.
@@ -22,9 +22,9 @@ If a needed choice is still in `docs/open-questions.md`, do not silently resolve
 
 ## Keep the three projects distinct
 
-### Eco
+### Ecosystem
 
-Eco is the user-facing work environment.
+Ecosystem is the full product name. Eco is the short form. It is the user-facing work environment.
 
 Do not reduce Eco to a chat client, an IDE wrapper, or a multi-agent dashboard. It combines a persistent spatial workplane with familiar messaging semantics.
 
@@ -77,7 +77,7 @@ Current explicit user instruction has the highest precedence.
 
 ### Frontend Lib
 
-Frontend Lib is the UI system for model-authored product work and the intended interface foundation for Eco.
+Frontend Lib is the UI system for model-authored product work and the intended interface foundation for Ecosystem.
 
 Prefer its public vocabulary over direct use of underlying UI libraries once the package exists.
 

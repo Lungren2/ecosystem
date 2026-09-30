@@ -1,8 +1,8 @@
-# Eco architecture
+# Ecosystem architecture
 
 ## Current direction
 
-Eco is a desktop environment for long-running agentic work. Its main architectural problem is coherence over time.
+Ecosystem, or Eco for short, is a desktop environment for long-running agentic work. Its main architectural problem is coherence over time.
 
 The discussion started from a simple observation: capable models can solve many local problems but become unreliable when a long task requires them to preserve a large set of dependent decisions, assumptions, evidence, and obligations. Eco moves that burden out of one model session and into durable state that the system can inspect and revise.
 

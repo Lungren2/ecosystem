@@ -1,6 +1,6 @@
 # Ecosystem
 
-Ecosystem is the monorepo for Eco, Agent Context Framework, and Frontend Lib.
+Ecosystem is the product and monorepo. Eco is its short name. The repository also contains two currently provisional components: Agent Context Framework and Frontend Lib.
 
 The repository starts with documentation because the ideas are still changing quickly. The first job is to preserve the distinctions that matter so implementation does not collapse them into a familiar but weaker product.
 
@@ -8,8 +8,8 @@ The repository starts with documentation because the ideas are still changing qu
 
 The detailed project model lives in [docs](./docs/README.md):
 
-- [Eco architecture](./docs/eco/architecture.md)
-- [Eco interface](./docs/eco/interface.md)
+- [Ecosystem architecture](./docs/ecosystem/architecture.md)
+- [Ecosystem interface](./docs/ecosystem/interface.md)
 - [Agent Context Framework](./docs/acf/README.md)
 - [Frontend Lib](./docs/frontend-lib/README.md)
 - [Open questions](./docs/open-questions.md)
@@ -18,9 +18,9 @@ The root README stays compact. When a detailed document and an old chat summary 
 
 ## Projects
 
-### Eco
+### Ecosystem
 
-Eco is a desktop work environment for long-running agentic work.
+Ecosystem, or Eco for short, is a desktop work environment for long-running agentic work.
 
 The interface combines familiar conversation with a spatial workplane. Groups behave more like persistent browser tabs or shared rooms than project folders. Individual threads remain available in a dense sidebar. Inside a group, chat, editor, browser, terminal, diff, evidence views, and other tools can coexist as panes.
 
@@ -46,7 +46,7 @@ A rough shell:
 └──────────────┴──────────────────────────────────────────────────────────────┘
 ```
 
-The current Eco thesis keeps several structures separate:
+The current Ecosystem thesis keeps several structures separate:
 
 - A work map describes what needs to be done or reasoned about.
 - A wholarchy describes which durable local worlds exist.
@@ -113,7 +113,7 @@ It is a source-owned UI system intended as a personal replacement for shadcn/ui.
 - Installed component source belongs to the application and remains editable.
 - The CLI treats installation, removal, drift, configuration, and upgrades as system operations rather than isolated file copies.
 
-Frontend Lib should make the preferred interface easier for both humans and agents to produce. Eco should use it rather than building a parallel set of ad hoc components.
+Frontend Lib should make the preferred interface easier for both humans and agents to produce. Ecosystem should use it rather than building a parallel set of ad hoc components.
 
 ## Shared design rules
 
@@ -136,7 +136,7 @@ The exact package boundaries are intentionally not frozen yet. The likely direct
 ```text
 ecosystem/
 ├─ apps/
-│  └─ eco/
+│  └─ ecosystem/
 ├─ packages/
 │  ├─ acf/
 │  └─ frontend-lib/

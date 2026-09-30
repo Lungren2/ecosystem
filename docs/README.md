@@ -17,14 +17,14 @@ Do not silently turn an open question into architecture.
 
 ## Project documents
 
-- [Eco architecture](./eco/architecture.md) records the runtime and cognition model.
-- [Eco interface](./eco/interface.md) records the desktop shell, spatial workplane, messaging model, and keyboard-navigation direction.
+- [Ecosystem architecture](./ecosystem/architecture.md) records the runtime and cognition model.
+- [Ecosystem interface](./ecosystem/interface.md) records the desktop shell, spatial workplane, messaging model, and keyboard-navigation direction.
 - [ACF](./acf/README.md) records the shift from the old Agent Context Framework runtime toward an OpenAI-native plugin marketplace with durable teaching and semantic adaptation.
 - [Frontend Lib](./frontend-lib/README.md) records the source-owned UI system intended to make model-authored frontend work conform to the product's actual interface language.
 - [Open questions](./open-questions.md) keeps unresolved choices visible without making them accidental contracts.
 
 ## Source material
 
-The first version of these documents was reconstructed from the September 2026 ACF/Eco design conversations, the supplied Eco architecture notes, the Frontend Lib proposal, the current ACF repository, UI reference images, and the older Monaco/Tauri prototype.
+The first version of these documents was reconstructed from the September 2026 ACF/Eco design conversations, the supplied Ecosystem architecture notes, the Frontend Lib proposal, the current ACF repository, UI reference images, and the older Monaco/Tauri prototype.
 
 The raw conversation scrape is not committed as product documentation. It contains exploratory wording, repeated interpretations, and attachments that are better represented by the project documents above. Where later discussion sharpened an earlier idea, these docs record both the current direction and the historical wording when the difference matters.

@@ -2,6 +2,8 @@
 
 ## Current direction
 
+The name "Agent Context Framework" is provisional. A replacement name has not been chosen.
+
 Agent Context Framework is being redesigned around OpenAI plugins.
 
 The new ACF is not primarily a model runtime. It is a way to distribute agent behavior, let users teach that behavior over time, and carry those teachings across upstream plugin updates without permanently forking the plugin.

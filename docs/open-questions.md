@@ -4,7 +4,7 @@ This file keeps unresolved choices visible.
 
 A question in this file is not permission to choose an answer silently during implementation. Resolve it deliberately and move the result into the document that owns the decision.
 
-## Eco
+## Ecosystem
 
 ### Agent and holon identity
 
@@ -120,6 +120,13 @@ Local session facts must stay separate from generalized behavior.
 
 ## Agent Context Framework
 
+### Replacement name for Agent Context Framework
+
+"Agent Context Framework" and "ACF" are working names and should be replaced. The new name should fit the current product: an OpenAI-native plugin marketplace plus durable teaching, scoped adaptation, provenance, and semantic reconciliation across upstream updates.
+
+Do not pick a name that implies the old custom runtime is still the product.
+
+
 ### Plugin packaging
 
 The target is an OpenAI-native marketplace, but the exact package layout and compatibility strategy should follow the plugin format we actually implement against.
@@ -214,15 +221,15 @@ We have not chosen which project provides the first executable slice of Ecosyste
 
 Likely candidates include:
 
-- an Eco shell that proves groups, thread rail, and spatial pane navigation;
+- an Ecosystem shell that proves groups, thread rail, and spatial pane navigation;
 - an ACF plugin personalization prototype;
-- a minimal Frontend Lib foundation needed to build the Eco shell.
+- a minimal Frontend Lib foundation needed to build the Ecosystem shell.
 
 The choice should prove a risky product assumption rather than maximize initial code volume.
 
 ### Shared persistence
 
-Eco, ACF personalization, and desktop workspace state all need persistence, but they do not necessarily need one database or schema.
+Ecosystem, ACF personalization, and desktop workspace state all need persistence, but they do not necessarily need one database or schema.
 
 Do not unify storage simply because the projects share a monorepo.
 

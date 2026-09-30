@@ -1,8 +1,8 @@
-# Eco interface
+# Ecosystem interface
 
 ## Current direction
 
-Eco should combine a serious desktop work environment with interaction patterns that already feel familiar to people who use messaging apps and browsers.
+Ecosystem, or Eco for short, should combine a serious desktop work environment with interaction patterns that already feel familiar to people who use messaging apps and browsers.
 
 The shell has three different navigation concerns:
 
@@ -76,7 +76,7 @@ Its conceptual matrix looked like this:
 
                          up / down
 
-Eco should preserve the principle, not necessarily those exact bindings or fixed view types.
+Ecosystem should preserve the principle, not necessarily those exact bindings or fixed view types.
 
 ## Spatial workplane
 
@@ -199,7 +199,7 @@ The goal is spatial predictability.
 
 The user should be able to navigate the workplane without learning that "terminal is panel 3" or "browser is activity item 6".
 
-The old prototype used Alt+Arrow navigation. Eco may use a different chord, but the semantics should remain geometric.
+The old prototype used Alt+Arrow navigation. Ecosystem may use a different chord, but the semantics should remain geometric.
 
 Group switching needs a separate cheap action so pane movement and group movement do not compete for the same mental model.
 
@@ -207,7 +207,7 @@ Exact key bindings remain open.
 
 ## Consumer familiarity
 
-Eco's internal model can include durable worlds, activations, working graphs, evidence provenance, selective invalidation, snapshot-isolated rounds, and authority boundaries.
+Ecosystem's internal model can include durable worlds, activations, working graphs, evidence provenance, selective invalidation, snapshot-isolated rounds, and authority boundaries.
 
 The default interface should not require the user to learn those terms before they can work.
 
