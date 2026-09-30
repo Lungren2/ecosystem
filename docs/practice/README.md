@@ -33,6 +33,16 @@ OpenAI increasingly owns generic model execution, sessions, tools, cloud executi
 
 The old runtime code is useful research material. It should not silently become the architecture of the new monorepo.
 
+## Pinned ACF reference
+
+Practice pins the historical ACF repository at commit `cd0516aa39472f64a460028a05449ae4e71fe244`.
+
+The reference is materialized on demand into the gitignored `.references/agent-context-framework` directory. Practice does not import the repository as a subtree or package dependency.
+
+This reference exists so future work can inspect the exact instructions, skills, checks, and runtime experiments that informed Practice. Adoption is selective. Every adopted piece should retain its original source path and commit provenance, and it should be changed when the current Practice contract requires different behavior.
+
+The initial review set is the ACF instruction registry, focused Codex skills, and repository-policy checks. Objective scheduling, workflow runtime, and orchestration packages remain historical by default.
+
 ## Plugin customization should look like teaching
 
 Traditional configuration exposes options the plugin author anticipated.
