@@ -12,22 +12,11 @@ OpenAI plugin documentation discussed during the design work: https://developers
 
 ## Why change the old ACF
 
-The existing agent-context-framework repository grew into two different things.
+The existing agent-context-framework repository mixed reusable Codex skills with a larger instruction, governance, repository-policy, and execution system.
 
-One part is valuable learned behavior:
+Practice currently carries forward only selected skill directories. Their references, scripts, fixtures, source metadata, cached documentation, and upstream license files remain part of each skill.
 
-- baseline instructions;
-- focused skills;
-- repository discipline;
-- verification rules;
-- writing rules;
-- source attribution;
-- checks that turn some prose rules into evidence;
-- practical lessons learned from repeated Codex use.
-
-The other part is a substantial custom execution system with objective scheduling, durable orchestration, workflow runtimes, persistence, budgets, leases, task envelopes, and related infrastructure.
-
-The current direction is to keep the first category and stop treating the second category as the reason Practice must exist.
+The ACF instruction registry, governance system, repository-policy framework, objective scheduling, workflow runtime, persistence machinery, and orchestration code remain historical unless a later requirement adopts a specific piece.
 
 OpenAI increasingly owns generic model execution, sessions, tools, cloud execution, and ordinary agent orchestration. Practice should only add runtime machinery when a concrete requirement remains unsolved by the host.
 
@@ -39,9 +28,9 @@ Practice pins the historical ACF repository at commit `cd0516aa39472f64a460028a0
 
 The reference is materialized on demand into the gitignored `.references/agent-context-framework` directory. Practice does not import the repository as a subtree or package dependency.
 
-This reference exists so future work can inspect the exact instructions, skills, checks, and runtime experiments that informed Practice. Adoption is selective. Every adopted piece should retain its original source path and commit provenance, and it should be changed when the current Practice contract requires different behavior.
+This reference exists so future work can inspect the exact source that informed Practice. The current adoption boundary is the selected skill catalog in `practice/reference/acf/selected-skills.txt`.
 
-The initial review set is the ACF instruction registry, focused Codex skills, and repository-policy checks. Objective scheduling, workflow runtime, and orchestration packages remain historical by default.
+Selected skills install into `.codex/skills/` with complete supporting files and pinned commit provenance. The rest of ACF remains historical by default.
 
 ## Plugin customization should look like teaching
 

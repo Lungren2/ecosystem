@@ -9,7 +9,7 @@ The pinned reference is:
 - tree: `bdea1d3608e305f6f22513971e5ab7d44e4e17bc`
 - license: MIT
 
-Materialize it outside the tracked source tree:
+Materialize the reference outside the tracked source tree:
 
 ```bash
 ./practice/reference/acf/fetch-acf-reference.sh
@@ -18,33 +18,68 @@ Materialize it outside the tracked source tree:
 
 The clone lives at `.references/agent-context-framework` and is gitignored.
 
-## What to inspect first
+## What Practice keeps
 
-The old repository contains useful behavior that can inform Practice without bringing its runtime with it.
+Practice carries forward selected ACF skills and the files those skills own. It does not carry forward the ACF instruction registry, governance system, repository-policy framework, objective runtime, or workflow runtime.
 
-Start with:
+The selected skill names live in `selected-skills.txt`. The current selection is:
 
-- `registry/sources/instructions/` for baseline, repository, verification, frontend, documentation, and writing policy;
-- `.codex/skills/diagnose/`;
-- `.codex/skills/reuse-before-implementation/`;
-- `.codex/skills/design-typescript-invariants/`;
-- `.codex/skills/design-operational-boundaries/`;
-- `.codex/skills/separate-shared-state/`;
-- `.codex/skills/frontend-design-discipline/`;
-- `tools/repo-policy/` when a prose rule needs an executable check.
+```text
+adopt-established-product
+choose-react-animation
+codebase-inventory
+design-accessible-interfaces
+design-color-systems
+design-interface-details
+design-operational-boundaries
+design-typescript-invariants
+design-web-typography
+diagnose
+frontend-design-discipline
+optimize-codex-sessions
+reduce-reader-load
+responsive-css-architect
+reuse-before-implementation
+separate-shared-state
+tailwind-css-architect
+writing-great-skills
+```
 
-Treat each adoption as a new Practice decision. Record the source path and pinned commit. Rewrite or narrow material when the current Practice contract differs from ACF.
+`tailwind-css-architect` remains part of the catalog. Its cached Tailwind documentation and other supporting files belong to the skill baseline and should remain intact when the skill is installed.
 
-## What not to migrate by default
+Three ACF skills are intentionally not selected:
 
-Do not copy these areas into Practice simply because they exist:
+- `maintain-agent-context-framework` exists to maintain the old ACF system;
+- `orchestrate-codex-workflows` belongs to the custom workflow direction Practice is moving away from;
+- `write-technical-prose` depends on the old repository-policy tooling that Practice is not adopting.
 
+## Install the selected skills
+
+After materializing the reference, install the selected baseline into the repository's Codex skill directory:
+
+```bash
+./practice/reference/acf/install-selected-skills.sh
+./practice/reference/acf/verify-selected-skills-baseline.sh
+```
+
+The installer copies complete skill directories into `.codex/skills/`. This includes references, scripts, fixtures, source metadata, cached documentation, and upstream license files owned by a selected skill.
+
+The installer also writes `.codex/skills/ACF_LICENSE.txt` and `.codex/skills/ACF_PROVENANCE.md`.
+
+It refuses to overwrite a selected skill that has diverged from the pinned baseline. Later edits to adopted skills are normal Practice work and should no longer be checked with the baseline verifier.
+
+## What remains historical
+
+Everything outside the selected skill directories remains reference material by default.
+
+In particular, do not migrate:
+
+- `registry/`;
 - `packages/objective-kernel/`;
 - `packages/objective-test-fixtures/`;
 - `packages/codex-workflow-runtime/`;
 - `tools/objective-runtime/`;
-- `tools/codex-workflows/`.
+- `tools/codex-workflows/`;
+- `tools/repo-policy/`.
 
-Those belong to the old execution and orchestration direction. Reuse from them requires a current requirement and a separate decision.
-
-The same rule applies to any other ACF source. Provenance makes material inspectable. It does not make it approved for adoption.
+A later requirement can still justify adopting a specific file or idea. That requires its own decision rather than treating the rest of ACF as latent Practice code.
