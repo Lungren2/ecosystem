@@ -32,6 +32,16 @@ This reference exists so future work can inspect the exact source that informed 
 
 Selected skills install into `.codex/skills/` with complete supporting files and pinned commit provenance. The rest of ACF remains historical by default.
 
+## ChatGPT companion
+
+Practice also owns a ChatGPT companion made of two parts: an OpenAI plugin with bounded MCP capabilities, and a Chrome extension that changes the chatgpt.com browsing experience.
+
+The browser extension is intended to add conversation export, split conversations, paginated navigation with bookmarks, selective bulk archive and delete, and inactivity-based auto archive.
+
+The MCP and extension have separate authority. The MCP exposes controlled external tools and must not reconstruct the user's full ChatGPT history. The Chrome extension owns client-side conversation management and compatibility with chatgpt.com.
+
+See [ChatGPT companion](./chatgpt-companion.md).
+
 ## Plugin customization should look like teaching
 
 Traditional configuration exposes options the plugin author anticipated.

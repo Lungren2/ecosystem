@@ -132,6 +132,33 @@ Local session facts must stay separate from generalized behavior.
 
 ## Practice
 
+### ChatGPT conversation acquisition
+
+The Chrome extension needs enough conversation metadata and content to index, export, archive, delete, and navigate chats.
+
+chatgpt.com does not provide a stable extension API for those operations. We still need to choose the least brittle supported acquisition path and isolate it behind the extension compatibility adapter.
+
+Do not spread DOM selectors, private request formats, or internal route assumptions through product code.
+
+### ChatGPT companion persistence
+
+We still need to choose the local store for conversation index entries, bookmarks, archive-rule history, and compatibility metadata.
+
+The index must remain rebuildable. Browser-local state should not become a second authoritative copy of ChatGPT conversations.
+
+### Auto archive policy
+
+The first rule direction is inactivity-based archive with bookmark exceptions.
+
+We still need to decide the default inactivity period, whether actions run automatically or begin in proposal mode, how users review prior auto-archive actions, and how failures retry.
+
+Automatic deletion is out of scope.
+
+### Split-conversation fallback
+
+Chrome documents programmatic Split View creation for Chrome 155 and later.
+
+We still need a fallback for browsers without that API. The fallback must use real ChatGPT tabs or windows and must not embed cloned ChatGPT application instances.
 
 ### Plugin packaging
 

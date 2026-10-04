@@ -16,6 +16,7 @@ Canonical concept owners:
 - `docs/ecosystem/interface.md` owns the desktop shell, groups, thread rail, panes, and spatial navigation.
 - `docs/ecosystem/desktop.md` owns the Code OSS fork, ProjectSession lifecycle, and upstream-workbench policy.
 - `docs/practice/README.md` owns the Practice marketplace and personalization model.
+- `docs/practice/chatgpt-companion.md` owns the ChatGPT companion, Chrome extension, and Codex Control MCP boundaries.
 - `docs/interface/README.md` owns the Interface design direction.
 - `docs/open-questions.md` records choices that are deliberately unresolved.
 
@@ -168,9 +169,12 @@ Practice starts with these default homes:
 ```text
 practice/
 ├─ plugins/             installable plugin and marketplace source
+├─ apps/                separately executable Practice-owned applications
 ├─ src/                 personalization, reconciliation, and marketplace behavior
 └─ tests/               Practice-wide integration tests
 ```
+
+The ChatGPT companion defaults to `practice/plugins/chatgpt-companion/` for the OpenAI plugin and MCP capability, and `practice/apps/chatgpt-extension/` for the Chrome extension. Keep chatgpt.com compatibility code inside the extension instead of spreading DOM or private-request assumptions through Practice.
 
 Do not migrate the old Agent Context Framework runtime wholesale. Move source into Practice only when it serves the current Practice design.
 
