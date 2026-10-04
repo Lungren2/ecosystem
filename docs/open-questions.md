@@ -138,6 +138,10 @@ The Chrome extension needs enough conversation metadata and content to index, ex
 
 chatgpt.com does not provide a stable extension API for those operations. We still need to choose the least brittle supported acquisition path and isolate it behind the extension compatibility adapter.
 
+Use `practice/tools/chatgpt-capture/` to collect sanitized HAR metadata and DOM structure for narrow flows before choosing that path. The first evidence set should cover initial load, history scrolling, opening a conversation, archiving one disposable conversation, and search.
+
+The capture tool does not retrieve response bodies. If a later question genuinely requires response content, expand the capture policy deliberately rather than silently collecting it.
+
 Do not spread DOM selectors, private request formats, or internal route assumptions through product code.
 
 ### ChatGPT companion persistence

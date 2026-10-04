@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ChatGPT Capture</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <main>
+      <h1>ChatGPT Capture</h1>
+      <p class="lede">
+        Record one small chatgpt.com flow, then export a sanitized evidence bundle.
+      </p>
+
+      <label>
+        Flow label
+        <input id="label" value="initial-load" spellcheck="false" />
+      </label>
+
+      <div class="actions">
+        <button id="start" type="button">Start flow</button>
+        <button id="export" type="button" disabled>Export sanitized capture</button>
+      </div>
+
+      <p id="status" role="status">Open chatgpt.com in the inspected tab.</p>
+
+      <details>
+        <summary>What is exported?</summary>
+        <ul>
+          <li>HAR metadata recorded after Start flow.</li>
+          <li>Request payload shape with text and identifiers redacted.</li>
+          <li>DOM structure with visible text, form values, scripts, and sensitive attributes removed.</li>
+          <li>A request summary grouped by host, method, and path.</li>
+        </ul>
+        <p>Response bodies are never collected by this tool.</p>
+      </details>
+    </main>
+
+    <script type="module" src="panel.js"></script>
+  </body>
+</html>

@@ -91,6 +91,32 @@ The exact interface is not frozen. The boundary is.
 
 If chatgpt.com changes, one adapter should fail and be replaced. The rest of the extension should remain testable against stable fixtures.
 
+## Compatibility evidence capture
+
+Before the production extension depends on chatgpt.com internals, collect narrow evidence for the actual flows we need.
+
+The repository includes a development-only Chrome DevTools extension at `practice/tools/chatgpt-capture/`. It records HAR metadata visible to DevTools after a flow start timestamp and a sanitized DOM structure from the inspected page.
+
+The capture tool deliberately does not retrieve response bodies. It redacts cookies, authorization material, common token fields, visible page text, form values, and likely identifiers before it writes a `.chatgpt-capture.json` file.
+
+Initial flow captures should answer one question each:
+
+```text
+initial-load
+scroll-history
+open-conversation
+archive-one
+search
+```
+
+Use disposable conversations for destructive-flow research.
+
+The purpose is to identify the smallest compatibility adapter that can support conversation listing, opening, export, archive, delete, pagination, and inactivity metadata. Captured private endpoints remain compatibility evidence. They do not become stable product contracts merely because they were observed once.
+
+Raw HARs and unsanitized page dumps must not be committed. Sanitized captures should also be inspected before sharing because metadata can still be private.
+
+Chrome's DevTools network API only reports requests visible to the current DevTools session, so reload chatgpt.com after opening DevTools when a complete initial-load capture is required.
+
 ## Conversation index
 
 Pagination, bookmarks, bulk selection, and inactivity rules should use an extension-owned index instead of treating ChatGPT's current virtualized sidebar as the product data model.
@@ -218,7 +244,9 @@ Shared code should stay inside one of these areas until both applications consum
 
 ## Initial implementation order
 
-Start with the browser extension as a small local tool and the Codex MCP as a small independent tool.
+Start by collecting sanitized compatibility evidence with `practice/tools/chatgpt-capture/`. Use those captures to choose the conversation adapter before implementing write operations.
+
+Then build the browser extension as a small local tool and the Codex MCP as a small independent tool.
 
 For the extension, prove:
 

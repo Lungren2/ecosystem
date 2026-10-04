@@ -170,11 +170,14 @@ Practice starts with these default homes:
 practice/
 ├─ plugins/             installable plugin and marketplace source
 ├─ apps/                separately executable Practice-owned applications
+├─ tools/               Practice-owned development and inspection tools
 ├─ src/                 personalization, reconciliation, and marketplace behavior
 └─ tests/               Practice-wide integration tests
 ```
 
 The ChatGPT companion defaults to `practice/plugins/chatgpt-companion/` for the OpenAI plugin and MCP capability, and `practice/apps/chatgpt-extension/` for the Chrome extension. Keep chatgpt.com compatibility code inside the extension instead of spreading DOM or private-request assumptions through Practice.
+
+Development-only evidence capture for that compatibility work belongs in `practice/tools/chatgpt-capture/`. Capture tooling must sanitize authentication material and user content before writing shareable evidence. Do not commit raw HARs or unsanitized page dumps.
 
 Do not migrate the old Agent Context Framework runtime wholesale. Move source into Practice only when it serves the current Practice design.
 

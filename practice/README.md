@@ -20,8 +20,12 @@ Default homes for new Practice implementation remain:
 ```text
 practice/
 ├─ plugins/
+├─ apps/
+├─ tools/
 ├─ src/
 └─ tests/
 ```
+
+The first Practice-owned developer tool is `tools/chatgpt-capture/`, a Chrome DevTools extension that exports sanitized HAR metadata and DOM structure for chatgpt.com compatibility research. It is evidence tooling, not the production ChatGPT extension.
 
 The current product contract lives in `docs/practice/README.md`.
