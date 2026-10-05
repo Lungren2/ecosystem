@@ -85,7 +85,7 @@ function sanitizeQueryString(queryString, pseudonymize) {
   });
 }
 
-function redactJsonValue(function redactJsonValue(value, key, pseudonymize) {
+function redactJsonValue(value, key, pseudonymize) {
   if (value === null || typeof value === "boolean") return value;
   if (typeof value === "number") return value;
 
@@ -216,70 +216,6 @@ function entriesFromHar(har) {
   if (Array.isArray(har?.entries)) return har.entries;
   if (Array.isArray(har?.log?.entries)) return har.log.entries;
   return [];
-}
-
-function sanitizeEntry(entry, pseudonymize) {
-  const request = entry?.request ?? {};
-  const response = entry?.response ?? {};
-
-  return {
-    ...entry,
-    request: {
-      ...request,
-      url: sanitizeUrl(request.url, pseudonymize),
-      headers: Array.isArray(request.headers)
-        ? request.headers.map((header) => sanitizeHeader(header, pseudonymize))
-        : request.headers,
-      cookies: Array.isArray(request.cookies)
-        ? request.cookies.map(sanitizeCookie)
-        : request.cookies,
-      queryString: Array.isArray(request.queryString)
-        ? request.queryString.map((param) => ({
-            ...param,
-            value: SENSITIVE_NAME.test(param?.name ?? "") || TEXT_FIELD.test(param?.name ?? "") || ID_FIELD.test(param?.name ?? "")
-              ? REDACTED
-              : ID_LIKE.test(String(param?.value ?? ""))
-                ? pseudonymize(String(param.value))
-                : isSimpleScalar(String(param?.value ?? ""))
-                  ? String(param.value)
-                  : REDACTED,
-          }))
-        : request.queryString,
-      postData: sanitizePostData(request.postData, pseudonymize),
-    },
-    response: {
-      ...response,
-      headers: Array.isArray(response.headers)
-        ? response.headers.map((header) => sanitizeHeader(header, pseudonymize))
-        : response.headers,
-      cookies: Array.isArray(response.cookies)
-        ? response.cookies.map(sanitizeCookie)
-        : response.cookies,
-      content: response.content
-        ? {
-            ...response.content,
-            text: undefined,
-          }
-        : response.content,
-      redirectURL: sanitizeUrl(response.redirectURL, pseudonymize),
-    },
-  };
-}
-
-export function sanitizeHar(har, { startedAt } = {}) {
-  const pseudonymize = createPseudonymizer();
-  const entries = Array.isArray(har?.log?.entries) ? har.log.entries : [];
-  const filtered = startedAt
-    ? entries.filter((entry) => Date.parse(entry.startedDateTime) >= startedAt)
-    : entries;
-
-  return {
-    ...har,
-    log: {
-      ...(har?.log ?? {}),
-      entries: filtered.map((entry) => sanitizeEntry(entry, pseudonymize)),
-    },
-  };
 }
 
 function normalizedPath(rawUrl) {
