@@ -4,7 +4,7 @@ This is a development-only Chrome DevTools extension for collecting small, sanit
 
 It exists to answer the compatibility questions in `docs/practice/chatgpt-companion.md` before the production Chrome extension depends on chatgpt.com internals.
 
-The tool does not capture response bodies. It redacts cookies, authorization material, common token fields, visible page text, form values, and likely identifiers before it writes a file.
+The tool does not capture response bodies. It does not retain Chrome's raw HAR object. It copies only allowlisted network fields, drops cookies and authentication headers entirely, and redacts common token fields, visible page text, form values, and likely identifiers before it writes a file.
 
 A capture can still contain private metadata. Inspect it before sharing or committing it.
 
@@ -53,7 +53,7 @@ In the DevTools panel:
 
 The Start flow timestamp filters the HAR export. It does not clear Chrome's Network panel.
 
-For the `initial-load` smoke test, start the flow before reloading the inspected tab, wait for the page to finish loading, and export from the same DevTools panel. Confirm that the downloaded JSON has a DOM tree and nonzero HAR entries, and that `privacy.unknownDomAttributeValuesRedacted` is true. Inspect the whole JSON for conversation titles or text, email addresses, account metadata, cookies, tokens, and raw identifiers. Keep the capture local unless inspection shows it is suitable to share. A sanitizer unit-test pass does not verify Chrome's DevTools APIs or the download flow.
+For the `initial-load` smoke test, start the flow before reloading the inspected tab, wait for the page to finish loading, and export from the same DevTools panel. Confirm that the downloaded JSON has a DOM tree and nonzero HAR entries, and that `privacy.unknownDomAttributeValuesRedacted`, `privacy.rawHarRetained === false`, and `privacy.networkFieldsAllowlisted` are true. Inspect the whole JSON for conversation titles or text, email addresses, account metadata, cookies, tokens, and raw identifiers. Keep the capture local unless inspection shows it is suitable to share. A sanitizer unit-test pass does not verify Chrome's DevTools APIs or the download flow.
 
 ## Capture format
 
@@ -62,12 +62,12 @@ Each bundle contains:
 - capture timestamps and label;
 - a privacy manifest describing what the tool removed;
 - sanitized DOM structure from the current page;
-- HAR entries after the flow start time;
+- compact, allowlisted HAR metadata after the flow start time;
 - a summary grouped by request method, host, and route.
 
 The tool preserves request shape where it can do so without preserving user text. JSON request bodies keep keys, booleans, numbers, a small set of protocol-like enum strings, and pseudonymized identifiers. Other strings become `<redacted:text>`.
 
-Response bodies are not requested from Chrome and are removed if they appear in the HAR object.
+Response bodies are not requested from Chrome. Raw request and response headers, cookie objects, page metadata, server addresses, and other HAR fields are not copied into the capture. Only Content-Type is retained from request headers.
 
 ## Development
 

@@ -13,6 +13,7 @@ const DOM_CAPTURE_EXPRESSION = String.raw`(() => {
   const REDACTED = "[REDACTED]";
   const ID_LIKE = /^(?:[0-9a-f]{8}-[0-9a-f-]{27,}|[0-9a-f]{20,}|\d{8,}|[A-Za-z0-9_-]{32,})$/i;
   const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
+  const LONG_TOKEN = /[A-Za-z0-9_-]{24,}/g;
   const sanitizeAttribute = ${sanitizeDomAttribute.toString()};
 
   const sanitizePath = (pathname) => pathname
@@ -20,13 +21,14 @@ const DOM_CAPTURE_EXPRESSION = String.raw`(() => {
     .map((segment) => {
       if (!segment) return segment;
       if (ID_LIKE.test(segment)) return ":id";
-      return segment.replace(UUID, ":id");
+      return segment.replace(UUID, ":id").replace(LONG_TOKEN, ":id");
     })
     .join("/");
 
   const sanitizeUrl = (raw) => {
     try {
       const url = new URL(raw, location.href);
+      if (!/^https?:$/.test(url.protocol)) return REDACTED;
       return url.origin + sanitizePath(url.pathname);
     } catch {
       return REDACTED;
@@ -142,7 +144,7 @@ exportButton.addEventListener("click", async () => {
     const capturedAt = new Date().toISOString();
 
     const bundle = {
-      schemaVersion: 1,
+      schemaVersion: 2,
       kind: "chatgpt-extension-evidence",
       label,
       capturedAt,
@@ -150,6 +152,8 @@ exportButton.addEventListener("click", async () => {
       startedUrl: startedUrl ? "https://chatgpt.com/" : null,
       privacy: {
         responseBodiesCollected: false,
+        rawHarRetained: false,
+        networkFieldsAllowlisted: true,
         visibleTextRedacted: true,
         formValuesRedacted: true,
         sensitiveHeadersRedacted: true,

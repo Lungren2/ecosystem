@@ -1,11 +1,13 @@
 const REDACTED = "[REDACTED]";
 const REDACTED_TEXT = "<redacted:text>";
-const ID_LIKE = /^(?:[0-9a-f]{8}-[0-9a-f-]{27,}|[0-9a-f]{20,}|\d{8,}|[A-Za-z0-9_-]{32,})$/i;
+const ID_LIKE = /^(?:[0-9a-f]{8}-[0-9a-f-]{27,}|[0-9a-f]{20,}|\d{8,}|[A-Za-z0-9_-]{24,})$/i;
 const UUID_IN_TEXT = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
+const LONG_TOKEN_IN_TEXT = /[A-Za-z0-9_-]{24,}/g;
 const SENSITIVE_NAME = /(?:authorization|proxy-authorization|cookie|set-cookie|csrf|xsrf|token|secret|password|api[-_]?key|session)/i;
 const TEXT_FIELD = /(?:message|prompt|content|text|title|query|search|email|name|description|instructions?)/i;
 const ID_FIELD = /(?:^|[_-])(?:id|uuid|conversation[_-]id|message[_-]id|account[_-]id|user[_-]id)(?:$|[_-])/i;
 const SAFE_STRING_FIELD = /^(?:action|type|role|status|mode|method|operation|mime_type|mimeType|content_type|contentType|sort|order)$/;
+const SAFE_HEADER = /^(?:content-type)$/i;
 
 export function createPseudonymizer() {
   const values = new Map();
@@ -24,11 +26,15 @@ export function sanitizeUrl(rawUrl, pseudonymize = createPseudonymizer()) {
 
   try {
     const url = new URL(rawUrl);
+    if (!/^(?:https?|wss?):$/.test(url.protocol)) return REDACTED;
     url.hash = "";
 
     const segments = url.pathname.split("/").map((segment) => {
       if (!segment) return segment;
-      return ID_LIKE.test(segment) ? pseudonymize(segment) : segment.replace(UUID_IN_TEXT, (value) => pseudonymize(value));
+      if (ID_LIKE.test(segment)) return pseudonymize(segment);
+      return segment
+        .replace(UUID_IN_TEXT, (value) => pseudonymize(value))
+        .replace(LONG_TOKEN_IN_TEXT, (value) => pseudonymize(value));
     });
     url.pathname = segments.join("/");
 
@@ -43,7 +49,7 @@ export function sanitizeUrl(rawUrl, pseudonymize = createPseudonymizer()) {
         continue;
       }
 
-      if (!isSimpleScalar(value)) {
+      if (!isSimpleScalar(value) && !isSafeEnumQuery(key, value)) {
         url.searchParams.set(key, REDACTED);
       }
     }
@@ -58,31 +64,28 @@ function isSimpleScalar(value) {
   return /^(?:true|false|null|-?\d+(?:\.\d+)?)$/i.test(value);
 }
 
-function sanitizeHeader(header, pseudonymize) {
-  const name = String(header?.name ?? "");
-  let value = String(header?.value ?? "");
-
-  if (SENSITIVE_NAME.test(name)) {
-    value = REDACTED;
-  } else if (/^(?:origin|referer|location)$/i.test(name)) {
-    value = sanitizeUrl(value, pseudonymize);
-  } else if (value.length > 512) {
-    value = REDACTED;
-  } else {
-    value = value.replace(UUID_IN_TEXT, (match) => pseudonymize(match));
-  }
-
-  return { ...header, name, value };
+function isSafeEnumQuery(key, value) {
+  return /^(?:order|sort|mode|expand|(?:exclude_)?conversation_origin)$/i.test(key)
+    && /^[A-Za-z][A-Za-z0-9_-]{0,24}$/.test(value);
 }
 
-function sanitizeCookie(cookie) {
-  return {
-    ...cookie,
-    value: REDACTED,
-  };
+function sanitizeQueryString(queryString, pseudonymize) {
+  if (!Array.isArray(queryString)) return undefined;
+  return queryString.map((param) => {
+    const name = String(param?.name ?? "");
+    const value = String(param?.value ?? "");
+    let sanitized = REDACTED;
+
+    if (!(SENSITIVE_NAME.test(name) || TEXT_FIELD.test(name) || ID_FIELD.test(name))) {
+      if (ID_LIKE.test(value)) sanitized = pseudonymize(value);
+      else if (isSimpleScalar(value) || isSafeEnumQuery(name, value)) sanitized = value;
+    }
+
+    return { name, value: sanitized };
+  });
 }
 
-function redactJsonValue(value, key, pseudonymize) {
+function redactJsonValue(function redactJsonValue(value, key, pseudonymize) {
   if (value === null || typeof value === "boolean") return value;
   if (typeof value === "number") return value;
 
@@ -110,12 +113,14 @@ function redactJsonValue(value, key, pseudonymize) {
 }
 
 function sanitizePostData(postData, pseudonymize) {
-  if (!postData || typeof postData !== "object") return postData;
+  if (!postData || typeof postData !== "object") return undefined;
 
-  const sanitized = { ...postData };
+  const sanitized = {};
+  if (typeof postData.mimeType === "string") sanitized.mimeType = postData.mimeType;
+
   if (Array.isArray(postData.params)) {
     sanitized.params = postData.params.map((param) => ({
-      ...param,
+      name: String(param?.name ?? ""),
       value: SENSITIVE_NAME.test(param?.name ?? "") || TEXT_FIELD.test(param?.name ?? "") || ID_FIELD.test(param?.name ?? "")
         ? REDACTED
         : isSimpleScalar(String(param?.value ?? ""))
@@ -128,8 +133,7 @@ function sanitizePostData(postData, pseudonymize) {
     const mimeType = String(postData.mimeType ?? "");
     if (mimeType.includes("json") || /^[\[{]/.test(postData.text.trim())) {
       try {
-        const parsed = JSON.parse(postData.text);
-        sanitized.text = JSON.stringify(redactJsonValue(parsed, "", pseudonymize));
+        sanitized.text = JSON.stringify(redactJsonValue(JSON.parse(postData.text), "", pseudonymize));
       } catch {
         sanitized.text = REDACTED_TEXT;
       }
@@ -139,6 +143,79 @@ function sanitizePostData(postData, pseudonymize) {
   }
 
   return sanitized;
+}
+
+function allowlistedHeaders(headers) {
+  if (!Array.isArray(headers)) return undefined;
+  const kept = headers
+    .filter((header) => SAFE_HEADER.test(String(header?.name ?? "")))
+    .map((header) => ({ name: String(header.name), value: String(header.value ?? "") }));
+  return kept.length > 0 ? kept : undefined;
+}
+
+function compactEntry(entry, pseudonymize) {
+  const request = entry?.request ?? {};
+  const response = entry?.response ?? {};
+  const content = response?.content ?? {};
+
+  const compact = {
+    startedDateTime: entry?.startedDateTime,
+    time: typeof entry?.time === "number" ? entry.time : undefined,
+    request: {
+      method: String(request.method ?? "UNKNOWN"),
+      url: sanitizeUrl(request.url, pseudonymize),
+      httpVersion: request.httpVersion,
+      headers: allowlistedHeaders(request.headers),
+      queryString: sanitizeQueryString(request.queryString, pseudonymize),
+      postData: sanitizePostData(request.postData, pseudonymize),
+    },
+    response: {
+      status: response.status,
+      statusText: response.statusText,
+      httpVersion: response.httpVersion,
+      content: response.content
+        ? {
+            size: content.size,
+            mimeType: content.mimeType,
+          }
+        : undefined,
+      redirectURL: sanitizeUrl(response.redirectURL, pseudonymize),
+    },
+  };
+
+  return JSON.parse(JSON.stringify(compact));
+}
+
+function sourceLog(har) {
+  if (Array.isArray(har?.entries)) return har;
+  if (har?.log && Array.isArray(har.log.entries)) return har.log;
+  return { entries: [] };
+}
+
+export function sanitizeHar(har, { startedAt } = {}) {
+  const pseudonymize = createPseudonymizer();
+  const source = sourceLog(har);
+  const entries = source.entries ?? [];
+  const filtered = startedAt
+    ? entries.filter((entry) => Date.parse(entry.startedDateTime) >= startedAt)
+    : entries;
+
+  return {
+    version: source.version ?? "1.2",
+    creator: source.creator
+      ? {
+          name: String(source.creator.name ?? "unknown"),
+          version: String(source.creator.version ?? "unknown"),
+        }
+      : undefined,
+    entries: filtered.map((entry) => compactEntry(entry, pseudonymize)),
+  };
+}
+
+function entriesFromHar(har) {
+  if (Array.isArray(har?.entries)) return har.entries;
+  if (Array.isArray(har?.log?.entries)) return har.log.entries;
+  return [];
 }
 
 function sanitizeEntry(entry, pseudonymize) {
@@ -215,7 +292,7 @@ function normalizedPath(rawUrl) {
 }
 
 export function summarizeHar(har) {
-  const entries = Array.isArray(har?.log?.entries) ? har.log.entries : [];
+  const entries = entriesFromHar(har);
   const hosts = new Map();
   const methods = new Map();
   const routes = new Map();
