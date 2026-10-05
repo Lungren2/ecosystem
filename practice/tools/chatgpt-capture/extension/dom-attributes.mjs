@@ -45,3 +45,33 @@ export function sanitizeDomAttribute(rawName, value, sanitizeUrl = () => "[REDAC
   }
   return redacted;
 }
+
+export function sanitizeDomUrl(raw, currentUrl) {
+  const redacted = "[REDACTED]";
+  const idLike = /^(?:[0-9a-f]{8}-[0-9a-f-]{27,}|[0-9a-f]{20,}|\d{8,}|[A-Za-z0-9_-]{24,})$/i;
+  const uuid = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
+  const longToken = /[A-Za-z0-9_-]{24,}/g;
+
+  try {
+    const base = new URL(currentUrl);
+    const url = new URL(raw, base);
+
+    if (!/^https?:$/.test(url.protocol)) return redacted;
+    if (!(url.hostname === "chatgpt.com" || url.hostname.endsWith(".chatgpt.com"))) return redacted;
+
+    url.hash = "";
+    url.search = "";
+    url.pathname = url.pathname
+      .split("/")
+      .map((segment) => {
+        if (!segment) return segment;
+        if (idLike.test(segment)) return ":id";
+        return segment.replace(uuid, ":id").replace(longToken, ":id");
+      })
+      .join("/");
+
+    return url.toString();
+  } catch {
+    return redacted;
+  }
+}

@@ -97,7 +97,7 @@ Before the production extension depends on chatgpt.com internals, collect narrow
 
 The repository includes a development-only Chrome DevTools extension at `practice/tools/chatgpt-capture/`. It records HAR metadata visible to DevTools after a flow start timestamp and a sanitized DOM structure from the inspected page.
 
-The capture tool deliberately does not retrieve response bodies or retain Chrome's raw HAR object. It copies only allowlisted network metadata, drops cookies and authentication headers, and redacts common token fields, visible page text, form values, and likely identifiers before it writes a `.chatgpt-capture.json` file.
+The capture tool deliberately does not retrieve response bodies or retain Chrome's raw HAR object. It copies only allowlisted network metadata, drops cookies and authentication headers, and redacts common token fields, visible page text, form values, likely identifiers, and external DOM link destinations before it writes a `.chatgpt-capture.json` file.
 
 DOM values are preserved only for allowlisted structural attributes with constrained values. Unknown attribute values, including short `data-*` values, class names, and free-text accessibility metadata, are redacted. DOM comments are emptied. Known text, identifier, URL, and authentication attributes keep their dedicated redaction rules. The complete capture still requires inspection before sharing.
 

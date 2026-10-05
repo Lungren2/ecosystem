@@ -1,5 +1,5 @@
 import { safeFilename, sanitizeHar, summarizeHar } from "./capture-core.mjs";
-import { sanitizeDomAttribute } from "./dom-attributes.mjs";
+import { sanitizeDomAttribute, sanitizeDomUrl } from "./dom-attributes.mjs";
 
 const labelInput = document.querySelector("#label");
 const startButton = document.querySelector("#start");
@@ -10,30 +10,9 @@ let startedAt = null;
 let startedUrl = null;
 
 const DOM_CAPTURE_EXPRESSION = String.raw`(() => {
-  const REDACTED = "[REDACTED]";
-  const ID_LIKE = /^(?:[0-9a-f]{8}-[0-9a-f-]{27,}|[0-9a-f]{20,}|\d{8,}|[A-Za-z0-9_-]{32,})$/i;
-  const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
-  const LONG_TOKEN = /[A-Za-z0-9_-]{24,}/g;
   const sanitizeAttribute = ${sanitizeDomAttribute.toString()};
-
-  const sanitizePath = (pathname) => pathname
-    .split("/")
-    .map((segment) => {
-      if (!segment) return segment;
-      if (ID_LIKE.test(segment)) return ":id";
-      return segment.replace(UUID, ":id").replace(LONG_TOKEN, ":id");
-    })
-    .join("/");
-
-  const sanitizeUrl = (raw) => {
-    try {
-      const url = new URL(raw, location.href);
-      if (!/^https?:$/.test(url.protocol)) return REDACTED;
-      return url.origin + sanitizePath(url.pathname);
-    } catch {
-      return REDACTED;
-    }
-  };
+  const sanitizeUrlValue = ${sanitizeDomUrl.toString()};
+  const sanitizeUrl = (raw) => sanitizeUrlValue(raw, location.href);
 
   const root = document.documentElement.cloneNode(true);
   root.querySelectorAll("script, style, noscript, template").forEach((node) => node.remove());
@@ -160,6 +139,7 @@ exportButton.addEventListener("click", async () => {
         cookiesRedacted: true,
         identifiersPseudonymized: true,
         unknownDomAttributeValuesRedacted: true,
+        externalDomUrlsRedacted: true,
       },
       page,
       summary,

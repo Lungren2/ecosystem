@@ -8,7 +8,7 @@ The tool does not capture response bodies. It does not retain Chrome's raw HAR o
 
 A capture can still contain private metadata. Inspect it before sharing or committing it.
 
-DOM attribute values use a narrow allowlist of roles, input types, direction, focusability, boolean attributes, and enumerated accessibility or component states. Unknown values, including arbitrary `data-*`, class names, and accessibility descriptions, become `[REDACTED]` even when short. Known text and identifier attributes keep their text or identifier markers; URL attributes keep sanitized URLs. Executable and authentication attributes are removed. DOM comments are emptied.
+DOM attribute values use a narrow allowlist of roles, input types, direction, focusability, boolean attributes, and enumerated accessibility or component states. Unknown values, including arbitrary `data-*`, class names, and accessibility descriptions, become `[REDACTED]` even when short. Known text and identifier attributes keep their text or identifier markers. URL attributes keep sanitized chatgpt.com URLs and redact external destinations. Executable and authentication attributes are removed. DOM comments are emptied.
 
 ## Load the extension
 
@@ -53,7 +53,7 @@ In the DevTools panel:
 
 The Start flow timestamp filters the HAR export. It does not clear Chrome's Network panel.
 
-For the `initial-load` smoke test, start the flow before reloading the inspected tab, wait for the page to finish loading, and export from the same DevTools panel. Confirm that the downloaded JSON has a DOM tree and nonzero HAR entries, and that `privacy.unknownDomAttributeValuesRedacted`, `privacy.rawHarRetained === false`, and `privacy.networkFieldsAllowlisted` are true. Inspect the whole JSON for conversation titles or text, email addresses, account metadata, cookies, tokens, and raw identifiers. Keep the capture local unless inspection shows it is suitable to share. A sanitizer unit-test pass does not verify Chrome's DevTools APIs or the download flow.
+For the `initial-load` smoke test, start the flow before reloading the inspected tab, wait for the page to finish loading, and export from the same DevTools panel. Confirm that the downloaded JSON has a DOM tree and nonzero HAR entries, and that `privacy.unknownDomAttributeValuesRedacted`, `privacy.externalDomUrlsRedacted`, `privacy.rawHarRetained === false`, and `privacy.networkFieldsAllowlisted` are true. Inspect the whole JSON for conversation titles or text, email addresses, account metadata, cookies, tokens, and raw identifiers. Keep the capture local unless inspection shows it is suitable to share. A sanitizer unit-test pass does not verify Chrome's DevTools APIs or the download flow.
 
 ## Capture format
 

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
-import { sanitizeDomAttribute } from "../extension/dom-attributes.mjs";
+import { sanitizeDomAttribute, sanitizeDomUrl } from "../extension/dom-attributes.mjs";
 
 test("unknown DOM attributes redact private values regardless of length", () => {
   for (const name of ["data-profile", "data-account", "data-preview", "custom", "class", "name", "aria-description", "aria-valuetext", "__proto__", "constructor"]) {
@@ -35,6 +35,19 @@ test("DOM attributes keep existing text, identifier, URL, and executable redacti
   for (const name of ["onclick", "srcdoc", "style", "data-token", "data-session", "data-auth"]) {
     assert.equal(sanitizeDomAttribute(name, "secret"), null);
   }
+});
+
+test("DOM URLs preserve only sanitized chatgpt.com destinations", () => {
+  assert.equal(
+    sanitizeDomUrl("https://chatgpt.com/c/123e4567-e89b-12d3-a456-426614174000?private=yes#fragment", "https://chatgpt.com/"),
+    "https://chatgpt.com/c/:id",
+  );
+  assert.equal(
+    sanitizeDomUrl("/g/123e4567-e89b-12d3-a456-426614174000/project", "https://chatgpt.com/"),
+    "https://chatgpt.com/g/:id/project",
+  );
+  assert.equal(sanitizeDomUrl("https://github.com/example/private/pull/12", "https://chatgpt.com/"), "[REDACTED]");
+  assert.equal(sanitizeDomUrl("data:image/png;base64,private", "https://chatgpt.com/"), "[REDACTED]");
 });
 
 test("the inspected-window attribute policy runs without module scope", () => {
