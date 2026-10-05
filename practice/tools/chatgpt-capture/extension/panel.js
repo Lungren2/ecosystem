@@ -56,20 +56,20 @@ const DOM_CAPTURE_EXPRESSION = String.raw`(() => {
         increment(dataAttributes, name);
 
         const targetable = isTargetAttribute(name);
-        if (targetable) increment(selectors, `${tag}[${name}]`);
+        if (targetable) increment(selectors, tag + "[" + name + "]");
 
         const safeValue = sanitizeTargetValue(name, value);
         if (safeValue !== null) {
           if (!dataAttributeValues.has(name)) dataAttributeValues.set(name, new Map());
           increment(dataAttributeValues.get(name), safeValue);
-          if (targetable) increment(selectors, `${tag}[${name}="${safeValue}"]`);
+          if (targetable) increment(selectors, tag + "[" + name + "=\"" + safeValue + "\"]");
         }
       }
 
       if (standardTargetNames.has(name)) {
         const safeValue = sanitizeAttribute(name, value, sanitizeUrl, sanitizeTargetValue);
         if (safeValue !== "[REDACTED]" && safeValue !== null && safeValue !== "") {
-          increment(standardSelectors, `${tag}[${name}="${safeValue}"]`);
+          increment(standardSelectors, tag + "[" + name + "=\"" + safeValue + "\"]");
         }
       }
     }
