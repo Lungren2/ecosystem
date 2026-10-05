@@ -151,7 +151,9 @@ One important detail is that `num_turns=10` does not imply ten message objects. 
 
 The content object is polymorphic. Sampled messages used fields such as `parts`, `thoughts`, `content`, `text`, and `source_analysis_msg_id`. Message metadata also contained model information, citation and content-reference fields, invoked-resource data, reasoning metadata, and tool-related fields. Export code should normalize visible conversation content deliberately instead of serializing every internal message as if it were user-facing text.
 
-The direct `GET /backend-api/conversations/:id` response did not yield a shape in this run. Four attempts failed inside the DevTools response-content path even though the network metadata showed successful JSON responses. The capture tool now records failure stage, status, MIME type, and declared body size so a later run can distinguish read, decode, parse, and shape-reduction failures.
+A later schema-v3 capture successfully reduced the direct `GET /backend-api/conversations/:id` response. The successful response includes conversation identity and timestamps, archive and memory state, owner structure, a bounded `messages` array, `current_node`, and cursor-based `page_info`. In the observed success, the response contained 19 message records.
+
+That run also exposed a capture-tool issue. The same endpoint produced both HTTP 200 and HTTP 429 responses, and the recorder merged them because it grouped only by endpoint kind. The tiny rate-limit body and the full success body therefore made almost every conversation-window field appear optional. Response-shape records are now grouped by endpoint kind and status so success and error contracts remain separate.
 
 These findings are enough to define provisional read models:
 

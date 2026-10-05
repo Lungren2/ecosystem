@@ -118,8 +118,12 @@ The first schema-v3 response-shape run confirmed:
 - conversation summaries include `id`, `title`, `create_time`, `update_time`, archive state, star state, and several compatibility fields;
 - `/backend-api/conversations/:id/messages` returns `messages` plus cursor-based `page_info`;
 - a request for ten turns may still contain hundreds of internal message records because tool, reasoning, citation, and connector records are included;
-- the direct conversation-window body still needs diagnosis.
+- the direct conversation-window response now reduces successfully and includes conversation metadata, a message window, current node, and cursor-based page information;
+- response shapes must be separated by HTTP status because the same endpoint can return both a full success body and a small rate-limit error body.
 
 The same run produced a useful styling inventory while keeping class values redacted. Presence selectors for thread titles, interactive conversation rows, user-message bubbles, assistant messages, app-shell regions, and composer regions are now better candidates than generated class names.
 
 Response-shape failures now include only the failure stage, HTTP status, MIME type, and declared body size. They never include response text.
+
+
+The recorder groups response-shape records by endpoint kind and HTTP status. This prevents a 429 error body from making fields in the 200 success schema look optional.

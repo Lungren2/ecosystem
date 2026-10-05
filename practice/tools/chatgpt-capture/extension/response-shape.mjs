@@ -12,6 +12,11 @@ export const responseShapeLimits = {
   maxResponseBytes: MAX_RESPONSE_BYTES,
 };
 
+export function responseShapeRecordKey(classification, response) {
+  const status = Number(response?.status ?? 0);
+  return `${classification.kind}:${status}`;
+}
+
 export function classifyResponseShapeRequest(method, rawUrl) {
   if (String(method).toUpperCase() !== "GET") return null;
 
@@ -200,6 +205,13 @@ export function createResponseShapeRecord(classification, response, parsedBody) 
 export function mergeResponseShapeRecords(left, right) {
   if (!left) return right;
   if (!right) return left;
+
+  const leftStatuses = JSON.stringify(left.statuses ?? []);
+  const rightStatuses = JSON.stringify(right.statuses ?? []);
+  if (left.kind !== right.kind || left.route !== right.route || leftStatuses !== rightStatuses) {
+    throw new Error("response-shape-record-mismatch");
+  }
+
   const statuses = [...new Set([...(left.statuses ?? []), ...(right.statuses ?? [])])].sort((a, b) => a - b);
   const mimeTypes = [...new Set([...(left.mimeTypes ?? []), ...(right.mimeTypes ?? [])])].sort();
   return {

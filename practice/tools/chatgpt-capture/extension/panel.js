@@ -6,6 +6,7 @@ import {
   createResponseShapeRecord,
   mergeResponseShapeRecords,
   responseShapeLimits,
+  responseShapeRecordKey,
 } from "./response-shape.mjs";
 import { isStyleTargetAttribute, sanitizeStyleTargetValue } from "./style-targets.mjs";
 
@@ -233,9 +234,10 @@ async function captureResponseShape(request, classification) {
     const parsed = JSON.parse(decoded);
     stage = "reduce-shape";
     const record = createResponseShapeRecord(classification, request.response, parsed);
+    const recordKey = responseShapeRecordKey(classification, request.response);
     responseShapeRecords.set(
-      classification.kind,
-      mergeResponseShapeRecords(responseShapeRecords.get(classification.kind), record),
+      recordKey,
+      mergeResponseShapeRecords(responseShapeRecords.get(recordKey), record),
     );
   } catch {
     addResponseShapeFailure(classification, request.response, stage + "-failed");
@@ -320,7 +322,10 @@ exportButton.addEventListener("click", async () => {
       page,
       responseShapes: {
         enabled: responseShapesEnabledForFlow,
-        records: [...responseShapeRecords.values()].sort((left, right) => left.kind.localeCompare(right.kind)),
+        records: [...responseShapeRecords.values()].sort((left, right) => (
+          left.kind.localeCompare(right.kind)
+          || (left.statuses?.[0] ?? 0) - (right.statuses?.[0] ?? 0)
+        )),
         failures: responseShapeFailures,
       },
       summary,

@@ -140,7 +140,7 @@ Sanitized browser evidence now confirms that current chatgpt.com conversation li
 
 The schema-v3 evidence now gives us the conversation list fields, offset metadata, message-page cursor metadata, and the broad message record structure. It also shows that a ten-turn request can contain hundreds of internal message records, so visible-turn normalization remains a product concern rather than a direct one-to-one mapping.
 
-The remaining read questions are attachment representation, which message/content variants should appear in user-facing export, and why the direct `GET /backend-api/conversations/:id` body could not be reduced by the DevTools capture path.
+The remaining read questions are attachment representation and which message/content variants should appear in user-facing export. A later schema-v3 capture successfully reduced the direct `GET /backend-api/conversations/:id` response, so that DevTools read failure is no longer an open question.
 
 We still need to decide whether the production extension should call these private request paths directly or obtain equivalent data through a less brittle mechanism.
 

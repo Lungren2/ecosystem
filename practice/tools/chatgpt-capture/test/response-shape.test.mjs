@@ -7,6 +7,7 @@ import {
   describeJsonShape,
   mergeJsonShapes,
   mergeResponseShapeRecords,
+  responseShapeRecordKey,
 } from "../extension/response-shape.mjs";
 
 test("classifies only allowlisted conversation GET responses", () => {
@@ -90,4 +91,24 @@ test("response-shape failures keep only safe diagnostic metadata", () => {
     mimeType: "application/json",
     declaredBodyBytes: 13_663_917,
   });
+});
+
+
+test("keeps response shapes separate by HTTP status", () => {
+  const classification = { kind: "conversation-window", route: "/backend-api/conversations/:id" };
+  assert.equal(responseShapeRecordKey(classification, { status: 200 }), "conversation-window:200");
+  assert.equal(responseShapeRecordKey(classification, { status: 429 }), "conversation-window:429");
+
+  const ok = createResponseShapeRecord(
+    classification,
+    { status: 200, content: { mimeType: "application/json", size: 55000 } },
+    { title: "x", messages: [] },
+  );
+  const limited = createResponseShapeRecord(
+    classification,
+    { status: 429, content: { mimeType: "application/json", size: 30 } },
+    { detail: "rate limited" },
+  );
+
+  assert.throws(() => mergeResponseShapeRecords(ok, limited), /response-shape-record-mismatch/);
 });
