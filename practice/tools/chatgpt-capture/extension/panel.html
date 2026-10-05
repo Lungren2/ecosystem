@@ -13,9 +13,17 @@
         Record one small chatgpt.com flow, then export a sanitized evidence bundle.
       </p>
 
-      <label>
+      <label class="field">
         Flow label
         <input id="label" value="initial-load" spellcheck="false" />
+      </label>
+
+      <label class="option">
+        <input id="response-shapes" type="checkbox" />
+        <span>
+          Capture conversation response shapes
+          <small>Reads allowlisted JSON responses transiently, then keeps keys, types, array lengths, and body-size ranges only.</small>
+        </span>
       </label>
 
       <div class="actions">
@@ -28,12 +36,13 @@
       <details>
         <summary>What is exported?</summary>
         <ul>
-          <li>HAR metadata recorded after Start flow.</li>
+          <li>Allowlisted HAR metadata recorded after Start flow.</li>
           <li>Request payload shape with text and identifiers redacted.</li>
           <li>DOM structure with visible text, form values, scripts, and sensitive attributes removed.</li>
+          <li>A styling-target inventory with data-attribute names and constrained UI enum values.</li>
+          <li>Optional response schemas for conversation list and message reads. Response text itself is not persisted.</li>
           <li>A request summary grouped by host, method, and path.</li>
         </ul>
-        <p>Response bodies are never collected by this tool.</p>
       </details>
     </main>
 

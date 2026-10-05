@@ -97,9 +97,15 @@ Before the production extension depends on chatgpt.com internals, collect narrow
 
 The repository includes a development-only Chrome DevTools extension at `practice/tools/chatgpt-capture/`. It records HAR metadata visible to DevTools after a flow start timestamp and a sanitized DOM structure from the inspected page.
 
-The capture tool deliberately does not retrieve response bodies or retain Chrome's raw HAR object. It copies only allowlisted network metadata, drops cookies and authentication headers, and redacts common token fields, visible page text, form values, likely identifiers, and external DOM link destinations before it writes a `.chatgpt-capture.json` file.
+The capture tool does not retain Chrome's raw HAR object. Normal captures do not retrieve response bodies. An explicit response-shape mode may transiently read JSON from the allowlisted conversation list and conversation-read GET routes. It converts each body to field names, value types, optionality, array lengths, and bounded size metadata, then discards the response text. This mode exists to define the conversation adapter without persisting chat content.
 
-DOM values are preserved only for allowlisted structural attributes with constrained values. Unknown attribute values, including short `data-*` values, class names, and free-text accessibility metadata, are redacted. DOM comments are emptied. Known text, identifier, URL, and authentication attributes keep their dedicated redaction rules. The complete capture still requires inspection before sharing.
+The normal export copies only allowlisted network metadata, drops cookies and authentication headers, and redacts common token fields, visible page text, form values, likely identifiers, and external DOM link destinations before it writes a `.chatgpt-capture.json` file.
+
+DOM values are preserved only for allowlisted structural or styling attributes with constrained values. Unknown attribute values, class names, and free-text accessibility metadata are redacted. DOM comments are emptied. Known text, identifier, URL, and authentication attributes keep their dedicated redaction rules.
+
+The capture also inventories styling targets separately from the sanitized HTML. The first useful candidates observed in the current ChatGPT DOM include `[data-thread-title]`, `[data-thread-title-trigger]`, `[data-interactive-row-link]`, `[data-user-message-bubble]`, `[data-conversation-role]`, `[data-state]`, `[data-variant]`, `[data-size]`, `[data-color]`, `[data-appearance]`, the `data-app-shell-*` family, and the `data-composer-*` family.
+
+Prefer these semantic and state attributes over generated class names when we need to target existing ChatGPT UI. Attribute presence is safer than depending on a value unless the value is a constrained UI enum observed repeatedly. The complete capture still requires inspection before sharing.
 
 Initial flow captures should answer one question each:
 
@@ -129,7 +135,7 @@ A sanitized schema-v2 capture from 2026-10-05 confirmed several current chatgpt.
 - Archiving a conversation was observed as `PATCH /backend-api/conversation/:id` with JSON containing `{"is_archived": true}`.
 - Deleting a conversation was observed as a successful `DELETE` against a conversation-specific endpoint.
 
-The capture intentionally omits response bodies, so it does not yet establish the conversation-list record schema, title and timestamp fields, complete message graph shape, attachment representation, or response-side pagination metadata. Those are the next compatibility questions for indexing and export.
+The schema-v2 capture did not establish the conversation-list record schema, title and timestamp fields, complete message graph shape, attachment representation, or response-side pagination metadata. Schema-v3 response-shape mode is intended to answer those questions without retaining response string values.
 
 The same capture also showed why DOM evidence needs separate privacy rules. Message content was redacted, but external link destinations embedded in rendered messages still identified unrelated repositories. The capture tool now redacts external DOM URLs and preserves only sanitized chatgpt.com destinations.
 

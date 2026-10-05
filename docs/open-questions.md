@@ -138,11 +138,17 @@ The Chrome extension needs enough conversation metadata and content to index, ex
 
 Sanitized browser evidence now confirms that current chatgpt.com conversation listing uses an offset-based `GET /backend-api/conversations` request with a 20-item limit and updated-time ordering. Conversation reads use bounded turn batches, with older messages fetched through a `before` message cursor. Archive and delete also have observable conversation-specific write requests.
 
-That narrows the question, but it does not make these private endpoints stable contracts. We still need the response shapes required for titles, activity timestamps, message graphs, attachments, and end-of-list detection. We also need to decide whether the production extension should call these request paths directly or obtain equivalent data through a less brittle mechanism.
+The capture tool now has an explicit response-shape mode for the conversation list and conversation-read GET routes. It reads matching JSON bodies transiently and stores only bounded structural summaries. The next evidence pass should determine the list record fields, activity timestamps, message and attachment structure, and pagination metadata from those shapes.
 
-Use `practice/tools/chatgpt-capture/` for further narrow evidence. The capture tool does not retrieve response bodies. If response structure is required next, add a deliberately scoped shape-capture mode for specific conversation endpoints rather than enabling arbitrary response-body collection.
+After that capture, we still need to decide whether the production extension should call these private request paths directly or obtain equivalent data through a less brittle mechanism.
 
 Do not spread DOM selectors, private request formats, or internal route assumptions through product code.
+
+### ChatGPT styling targets
+
+The sanitized DOM shows useful semantic and state attributes even though class values remain redacted. Candidate families include thread and message markers, `data-app-shell-*`, `data-composer-*`, and constrained state attributes such as `data-state`, `data-variant`, `data-size`, and `data-appearance`.
+
+We need to learn which of these attributes are stable across navigation, reloads, account states, and ChatGPT releases before the production extension relies on them. The capture tool now records attribute occurrence counts, safe enum values, and candidate selectors so repeated captures can be compared.
 
 ### ChatGPT companion persistence
 

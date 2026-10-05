@@ -1,5 +1,10 @@
 // Keep this function self-contained: the panel serializes it into the inspected tab.
-export function sanitizeDomAttribute(rawName, value, sanitizeUrl = () => "[REDACTED]") {
+export function sanitizeDomAttribute(
+  rawName,
+  value,
+  sanitizeUrl = () => "[REDACTED]",
+  sanitizeStyleValue = () => null,
+) {
   const name = rawName.toLowerCase();
   const redacted = "[REDACTED]";
 
@@ -14,6 +19,9 @@ export function sanitizeDomAttribute(rawName, value, sanitizeUrl = () => "[REDAC
     return value ? "TEXT" : "";
   }
   if (/^(?:href|src|action|poster)$/.test(name)) return sanitizeUrl(value);
+
+  const stylingValue = sanitizeStyleValue(name, value);
+  if (stylingValue !== null) return stylingValue;
 
   // A familiar attribute name alone does not make an arbitrary value safe.
   const structuralValues = {
@@ -35,7 +43,6 @@ export function sanitizeDomAttribute(rawName, value, sanitizeUrl = () => "[REDAC
     "aria-required": /^(?:true|false)$/,
     "aria-live": /^(?:off|polite|assertive)$/,
     "aria-orientation": /^(?:horizontal|vertical)$/,
-    "data-state": /^(?:open|closed|checked|unchecked|indeterminate|active|inactive|on|off)$/,
   };
   if (/^(?:checked|disabled|hidden|multiple|readonly|required|selected|inert)$/.test(name)) {
     return "";

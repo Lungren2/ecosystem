@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 import { sanitizeDomAttribute, sanitizeDomUrl } from "../extension/dom-attributes.mjs";
+import { sanitizeStyleTargetValue } from "../extension/style-targets.mjs";
 
 test("unknown DOM attributes redact private values regardless of length", () => {
   for (const name of ["data-profile", "data-account", "data-preview", "custom", "class", "name", "aria-description", "aria-valuetext", "__proto__", "constructor"]) {
@@ -15,7 +16,7 @@ test("structural DOM attributes preserve only allowed values", () => {
   for (const [name, value] of [
     ["role", "button"], ["type", "email"], ["dir", "rtl"], ["tabindex", "-1"],
     ["contenteditable", "plaintext-only"], ["aria-expanded", "false"],
-    ["aria-checked", "mixed"], ["aria-live", "polite"], ["data-state", "open"],
+    ["aria-checked", "mixed"], ["aria-live", "polite"],
   ]) {
     assert.equal(sanitizeDomAttribute(name, value), value);
     assert.equal(sanitizeDomAttribute(name.toUpperCase(), value), value);
@@ -23,6 +24,13 @@ test("structural DOM attributes preserve only allowed values", () => {
     assert.equal(sanitizeDomAttribute(name, `${value}\nprivate`), "[REDACTED]");
   }
   assert.equal(sanitizeDomAttribute("disabled", "private@example.test"), "");
+});
+
+test("approved styling attributes preserve constrained enum values", () => {
+  assert.equal(sanitizeDomAttribute("data-state", "open", undefined, sanitizeStyleTargetValue), "open");
+  assert.equal(sanitizeDomAttribute("data-variant", "ghost", undefined, sanitizeStyleTargetValue), "ghost");
+  assert.equal(sanitizeDomAttribute("data-composer-density", "compact", undefined, sanitizeStyleTargetValue), "compact");
+  assert.equal(sanitizeDomAttribute("data-thread-title", "private-title", undefined, sanitizeStyleTargetValue), "[REDACTED]");
 });
 
 test("DOM attributes keep existing text, identifier, URL, and executable redaction", () => {
