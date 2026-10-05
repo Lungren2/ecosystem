@@ -1,0 +1,7 @@
+interface:
+  display_name: "Writing Great Skills"
+  short_description: "Write concise Codex skills"
+  default_prompt: "Use $writing-great-skills to prune and organize this skill and its invocation metadata."
+
+policy:
+  allow_implicit_invocation: false

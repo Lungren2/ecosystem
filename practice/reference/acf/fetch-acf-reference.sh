@@ -10,16 +10,14 @@ target="$repo_root/$ACF_REFERENCE_PATH"
 if [[ ! -d "$target/.git" ]]; then
   mkdir -p "$(dirname "$target")"
   git clone --filter=blob:none --no-checkout "$ACF_REPOSITORY" "$target"
+elif [[ -n "$(git -C "$target" status --porcelain)" ]]; then
+  echo "Reference clone has local changes. Refusing to move it." >&2
+  exit 1
 fi
 
 origin_url="$(git -C "$target" remote get-url origin)"
 if [[ "$origin_url" != "$ACF_REPOSITORY" ]]; then
   echo "Reference clone origin is $origin_url, expected $ACF_REPOSITORY." >&2
-  exit 1
-fi
-
-if [[ -n "$(git -C "$target" status --porcelain)" ]]; then
-  echo "Reference clone has local changes. Refusing to move it." >&2
   exit 1
 fi
 

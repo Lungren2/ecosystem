@@ -66,7 +66,19 @@ The installer copies complete skill directories into `.codex/skills/`. This incl
 
 The installer also writes `.codex/skills/ACF_LICENSE.txt` and `.codex/skills/ACF_PROVENANCE.md`.
 
+It copies the upstream Git checkout attributes into `.codex/skills/.gitattributes` so the skill files retain their pinned line endings on Windows as well.
+
+The selected baseline is tracked in this repository, including its supporting files and notices. Run the verifier before committing an initial installation to confirm that the adopted files match the pinned source.
+
 It refuses to overwrite a selected skill that has diverged from the pinned baseline. Later edits to adopted skills are normal Practice work and should no longer be checked with the baseline verifier.
+
+The installer accepts LF or CRLF selection files. Its local-fixture regression test covers a fresh clone, repeated installation, baseline verification, and refusal to overwrite skill or reference edits:
+
+```bash
+node --test practice/reference/acf/test/baseline.test.mjs
+```
+
+This test uses Bash and Git. On Windows it uses the Bash bundled with Git for Windows.
 
 ## What remains historical
 

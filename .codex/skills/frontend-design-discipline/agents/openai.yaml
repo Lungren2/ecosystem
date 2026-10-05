@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Design Discipline"
+  short_description: "Define frontend structure before implementation"
+  default_prompt: "Use $frontend-design-discipline to settle the product structure and behavior before changing components."

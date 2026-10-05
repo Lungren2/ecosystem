@@ -8,6 +8,8 @@ The tool does not capture response bodies. It redacts cookies, authorization mat
 
 A capture can still contain private metadata. Inspect it before sharing or committing it.
 
+DOM attribute values use a narrow allowlist of roles, input types, direction, focusability, boolean attributes, and enumerated accessibility or component states. Unknown values, including arbitrary `data-*`, class names, and accessibility descriptions, become `[REDACTED]` even when short. Known text and identifier attributes keep their text or identifier markers; URL attributes keep sanitized URLs. Executable and authentication attributes are removed. DOM comments are emptied.
+
 ## Load the extension
 
 1. Open `chrome://extensions`.
@@ -50,6 +52,8 @@ In the DevTools panel:
 5. Inspect the downloaded `.chatgpt-capture.json` before sharing it.
 
 The Start flow timestamp filters the HAR export. It does not clear Chrome's Network panel.
+
+For the `initial-load` smoke test, start the flow before reloading the inspected tab, wait for the page to finish loading, and export from the same DevTools panel. Confirm that the downloaded JSON has a DOM tree and nonzero HAR entries, and that `privacy.unknownDomAttributeValuesRedacted` is true. Inspect the whole JSON for conversation titles or text, email addresses, account metadata, cookies, tokens, and raw identifiers. Keep the capture local unless inspection shows it is suitable to share. A sanitizer unit-test pass does not verify Chrome's DevTools APIs or the download flow.
 
 ## Capture format
 

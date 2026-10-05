@@ -18,6 +18,7 @@ fi
 mkdir -p "$skills_target"
 
 while IFS= read -r skill || [[ -n "$skill" ]]; do
+  skill="${skill%$'\r'}"
   [[ -z "$skill" ]] && continue
 
   source_dir="$skills_source/$skill"
@@ -48,6 +49,14 @@ if [[ -e "$license_target" ]] && ! cmp -s "$reference_root/LICENSE" "$license_ta
   exit 1
 fi
 cp "$reference_root/LICENSE" "$license_target"
+
+# Preserve upstream checkout bytes even when this repository uses core.autocrlf.
+attributes_target="$skills_target/.gitattributes"
+if [[ -e "$attributes_target" ]] && ! cmp -s "$reference_root/.gitattributes" "$attributes_target"; then
+  echo "Refusing to overwrite modified ACF checkout attributes." >&2
+  exit 1
+fi
+cp "$reference_root/.gitattributes" "$attributes_target"
 
 provenance_target="$skills_target/ACF_PROVENANCE.md"
 provenance_tmp="$(mktemp)"

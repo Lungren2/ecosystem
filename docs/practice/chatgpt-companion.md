@@ -99,6 +99,8 @@ The repository includes a development-only Chrome DevTools extension at `practic
 
 The capture tool deliberately does not retrieve response bodies. It redacts cookies, authorization material, common token fields, visible page text, form values, and likely identifiers before it writes a `.chatgpt-capture.json` file.
 
+DOM values are preserved only for allowlisted structural attributes with constrained values. Unknown attribute values, including short `data-*` values, class names, and free-text accessibility metadata, are redacted. DOM comments are emptied. Known text, identifier, URL, and authentication attributes keep their dedicated redaction rules. The complete capture still requires inspection before sharing.
+
 Initial flow captures should answer one question each:
 
 ```text

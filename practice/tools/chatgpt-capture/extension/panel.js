@@ -1,4 +1,5 @@
 import { safeFilename, sanitizeHar, summarizeHar } from "./capture-core.mjs";
+import { sanitizeDomAttribute } from "./dom-attributes.mjs";
 
 const labelInput = document.querySelector("#label");
 const startButton = document.querySelector("#start");
@@ -12,10 +13,7 @@ const DOM_CAPTURE_EXPRESSION = String.raw`(() => {
   const REDACTED = "[REDACTED]";
   const ID_LIKE = /^(?:[0-9a-f]{8}-[0-9a-f-]{27,}|[0-9a-f]{20,}|\d{8,}|[A-Za-z0-9_-]{32,})$/i;
   const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
-  const SENSITIVE_NAME = /(?:auth|token|cookie|csrf|xsrf|session|secret|password|api[-_]?key)/i;
-  const IDENTIFIER_NAME = /(?:^|[-_:])(?:user|account|conversation|message)?[-_:]?id(?:$|[-_:])/i;
-  const TEXT_ATTRIBUTE = /^(?:aria-label|title|placeholder|alt|value)$/i;
-  const URL_ATTRIBUTE = /^(?:href|src|action|poster)$/i;
+  const sanitizeAttribute = ${sanitizeDomAttribute.toString()};
 
   const sanitizePath = (pathname) => pathname
     .split("/")
@@ -38,43 +36,25 @@ const DOM_CAPTURE_EXPRESSION = String.raw`(() => {
   const root = document.documentElement.cloneNode(true);
   root.querySelectorAll("script, style, noscript, template").forEach((node) => node.remove());
 
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT | NodeFilter.SHOW_COMMENT);
   let node = walker.currentNode;
 
   while (node) {
-    if (node.nodeType === Node.TEXT_NODE) {
+    if (node.nodeType === Node.COMMENT_NODE) {
+      node.nodeValue = "";
+    } else if (node.nodeType === Node.TEXT_NODE) {
       if (node.nodeValue && node.nodeValue.trim()) node.nodeValue = "TEXT";
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       for (const attribute of [...node.attributes]) {
         const name = attribute.name;
         const value = attribute.value;
 
-        if (/^on/i.test(name) || name === "srcdoc" || name === "style" || SENSITIVE_NAME.test(name)) {
+        const sanitized = sanitizeAttribute(name, value, sanitizeUrl);
+        if (sanitized === null) {
           node.removeAttribute(name);
-          continue;
+        } else {
+          node.setAttribute(name, sanitized);
         }
-
-        if (IDENTIFIER_NAME.test(name)) {
-          node.setAttribute(name, value ? ":id" : "");
-          continue;
-        }
-
-        if (TEXT_ATTRIBUTE.test(name)) {
-          node.setAttribute(name, value ? "TEXT" : "");
-          continue;
-        }
-
-        if (URL_ATTRIBUTE.test(name)) {
-          node.setAttribute(name, sanitizeUrl(value));
-          continue;
-        }
-
-        if (value.length > 160) {
-          node.setAttribute(name, REDACTED);
-          continue;
-        }
-
-        node.setAttribute(name, value.replace(UUID, ":id"));
       }
 
       if ("value" in node) {
@@ -175,6 +155,7 @@ exportButton.addEventListener("click", async () => {
         sensitiveHeadersRedacted: true,
         cookiesRedacted: true,
         identifiersPseudonymized: true,
+        unknownDomAttributeValuesRedacted: true,
       },
       page,
       summary,

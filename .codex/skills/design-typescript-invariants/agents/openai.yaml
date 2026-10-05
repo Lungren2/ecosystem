@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design TypeScript Invariants"
+  short_description: "Design TypeScript types that prevent invalid states"
+  default_prompt: "Use $design-typescript-invariants to model valid states and validate data where it enters."

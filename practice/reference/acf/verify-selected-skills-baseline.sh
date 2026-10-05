@@ -13,6 +13,7 @@ selection="$script_dir/selected-skills.txt"
 "$script_dir/verify-acf-reference.sh"
 
 while IFS= read -r skill || [[ -n "$skill" ]]; do
+  skill="${skill%$'\r'}"
   [[ -z "$skill" ]] && continue
 
   source_dir="$skills_source/$skill"
@@ -36,6 +37,11 @@ fi
 
 if [[ ! -f "$skills_target/ACF_PROVENANCE.md" ]]; then
   echo "Missing .codex/skills/ACF_PROVENANCE.md." >&2
+  exit 1
+fi
+
+if ! cmp -s "$reference_root/.gitattributes" "$skills_target/.gitattributes"; then
+  echo "ACF checkout attributes are missing or differ from the pinned source." >&2
   exit 1
 fi
 
