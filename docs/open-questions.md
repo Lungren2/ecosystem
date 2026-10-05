@@ -136,11 +136,11 @@ Local session facts must stay separate from generalized behavior.
 
 The Chrome extension needs enough conversation metadata and content to index, export, archive, delete, and navigate chats.
 
-chatgpt.com does not provide a stable extension API for those operations. We still need to choose the least brittle supported acquisition path and isolate it behind the extension compatibility adapter.
+Sanitized browser evidence now confirms that current chatgpt.com conversation listing uses an offset-based `GET /backend-api/conversations` request with a 20-item limit and updated-time ordering. Conversation reads use bounded turn batches, with older messages fetched through a `before` message cursor. Archive and delete also have observable conversation-specific write requests.
 
-Use `practice/tools/chatgpt-capture/` to collect sanitized HAR metadata and DOM structure for narrow flows before choosing that path. The first evidence set should cover initial load, history scrolling, opening a conversation, archiving one disposable conversation, and search.
+That narrows the question, but it does not make these private endpoints stable contracts. We still need the response shapes required for titles, activity timestamps, message graphs, attachments, and end-of-list detection. We also need to decide whether the production extension should call these request paths directly or obtain equivalent data through a less brittle mechanism.
 
-The capture tool does not retrieve response bodies. If a later question genuinely requires response content, expand the capture policy deliberately rather than silently collecting it.
+Use `practice/tools/chatgpt-capture/` for further narrow evidence. The capture tool does not retrieve response bodies. If response structure is required next, add a deliberately scoped shape-capture mode for specific conversation endpoints rather than enabling arbitrary response-body collection.
 
 Do not spread DOM selectors, private request formats, or internal route assumptions through product code.
 

@@ -119,6 +119,20 @@ Raw HARs and unsanitized page dumps must not be committed. Sanitized captures sh
 
 Chrome's DevTools network API only reports requests visible to the current DevTools session, so reload chatgpt.com after opening DevTools when a complete initial-load capture is required.
 
+### Observed compatibility evidence
+
+A sanitized schema-v2 capture from 2026-10-05 confirmed several current chatgpt.com request patterns. These are observations, not stable APIs.
+
+- Conversation history is requested from `GET /backend-api/conversations` with `limit=20`, `order=updated`, and offsets including `0` and `20`. The request also carries archived, starred, and conversation-origin filters. This is enough evidence to design numbered pagination on top of an offset-based adapter.
+- Opening a conversation requests `GET /backend-api/conversations/:id` with `num_turns=10` and `include_has_versions=true`.
+- Older message batches are requested from `GET /backend-api/conversations/:id/messages` with a `before=:messageId` cursor and `num_turns=10`.
+- Archiving a conversation was observed as `PATCH /backend-api/conversation/:id` with JSON containing `{"is_archived": true}`.
+- Deleting a conversation was observed as a successful `DELETE` against a conversation-specific endpoint.
+
+The capture intentionally omits response bodies, so it does not yet establish the conversation-list record schema, title and timestamp fields, complete message graph shape, attachment representation, or response-side pagination metadata. Those are the next compatibility questions for indexing and export.
+
+The same capture also showed why DOM evidence needs separate privacy rules. Message content was redacted, but external link destinations embedded in rendered messages still identified unrelated repositories. The capture tool now redacts external DOM URLs and preserves only sanitized chatgpt.com destinations.
+
 ## Conversation index
 
 Pagination, bookmarks, bulk selection, and inactivity rules should use an extension-owned index instead of treating ChatGPT's current virtualized sidebar as the product data model.
