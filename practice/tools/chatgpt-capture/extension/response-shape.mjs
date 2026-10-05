@@ -213,3 +213,15 @@ export function mergeResponseShapeRecords(left, right) {
     shape: mergeJsonShapes(left.shape, right.shape),
   };
 }
+
+
+export function createResponseShapeFailure(classification, response, reason) {
+  return {
+    kind: classification.kind,
+    route: classification.route,
+    reason,
+    status: Number(response?.status ?? 0),
+    mimeType: String(response?.content?.mimeType ?? ""),
+    declaredBodyBytes: Number(response?.content?.size ?? 0),
+  };
+}

@@ -2,6 +2,7 @@ import { safeFilename, sanitizeHar, summarizeHar } from "./capture-core.mjs";
 import { sanitizeDomAttribute, sanitizeDomUrl } from "./dom-attributes.mjs";
 import {
   classifyResponseShapeRequest,
+  createResponseShapeFailure,
   createResponseShapeRecord,
   mergeResponseShapeRecords,
   responseShapeLimits,
@@ -197,43 +198,47 @@ function readRequestContent(request) {
   });
 }
 
-function addResponseShapeFailure(classification, reason) {
-  responseShapeFailures.push({
-    kind: classification.kind,
-    route: classification.route,
-    reason,
-  });
+function addResponseShapeFailure(classification, response, reason) {
+  responseShapeFailures.push(createResponseShapeFailure(classification, response, reason));
 }
 
 async function captureResponseShape(request, classification) {
   const mimeType = String(request?.response?.content?.mimeType ?? "");
   if (!mimeType.includes("json")) {
-    addResponseShapeFailure(classification, "not-json");
+    addResponseShapeFailure(classification, request.response, "not-json");
     return;
   }
 
   const declaredSize = Number(request?.response?.content?.size ?? 0);
   if (declaredSize > responseShapeLimits.maxResponseBytes) {
-    addResponseShapeFailure(classification, "response-too-large");
+    addResponseShapeFailure(classification, request.response, "response-too-large");
     return;
   }
 
+  let stage = "read-content";
   try {
     const { content, encoding } = await readRequestContent(request);
+    stage = "decode-content";
     const decoded = decodeResponseContent(String(content), String(encoding));
+    if (!decoded.trim()) {
+      addResponseShapeFailure(classification, request.response, "empty-response");
+      return;
+    }
     if (decoded.length > responseShapeLimits.maxResponseBytes * 2) {
-      addResponseShapeFailure(classification, "response-too-large");
+      addResponseShapeFailure(classification, request.response, "response-too-large");
       return;
     }
 
+    stage = "parse-json";
     const parsed = JSON.parse(decoded);
+    stage = "reduce-shape";
     const record = createResponseShapeRecord(classification, request.response, parsed);
     responseShapeRecords.set(
       classification.kind,
       mergeResponseShapeRecords(responseShapeRecords.get(classification.kind), record),
     );
   } catch {
-    addResponseShapeFailure(classification, "shape-capture-failed");
+    addResponseShapeFailure(classification, request.response, stage + "-failed");
   }
 }
 

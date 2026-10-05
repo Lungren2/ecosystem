@@ -138,9 +138,11 @@ The Chrome extension needs enough conversation metadata and content to index, ex
 
 Sanitized browser evidence now confirms that current chatgpt.com conversation listing uses an offset-based `GET /backend-api/conversations` request with a 20-item limit and updated-time ordering. Conversation reads use bounded turn batches, with older messages fetched through a `before` message cursor. Archive and delete also have observable conversation-specific write requests.
 
-The capture tool now has an explicit response-shape mode for the conversation list and conversation-read GET routes. It reads matching JSON bodies transiently and stores only bounded structural summaries. The next evidence pass should determine the list record fields, activity timestamps, message and attachment structure, and pagination metadata from those shapes.
+The schema-v3 evidence now gives us the conversation list fields, offset metadata, message-page cursor metadata, and the broad message record structure. It also shows that a ten-turn request can contain hundreds of internal message records, so visible-turn normalization remains a product concern rather than a direct one-to-one mapping.
 
-After that capture, we still need to decide whether the production extension should call these private request paths directly or obtain equivalent data through a less brittle mechanism.
+The remaining read questions are attachment representation, which message/content variants should appear in user-facing export, and why the direct `GET /backend-api/conversations/:id` body could not be reduced by the DevTools capture path.
+
+We still need to decide whether the production extension should call these private request paths directly or obtain equivalent data through a less brittle mechanism.
 
 Do not spread DOM selectors, private request formats, or internal route assumptions through product code.
 
@@ -148,7 +150,9 @@ Do not spread DOM selectors, private request formats, or internal route assumpti
 
 The sanitized DOM shows useful semantic and state attributes even though class values remain redacted. Candidate families include thread and message markers, `data-app-shell-*`, `data-composer-*`, and constrained state attributes such as `data-state`, `data-variant`, `data-size`, and `data-appearance`.
 
-We need to learn which of these attributes are stable across navigation, reloads, account states, and ChatGPT releases before the production extension relies on them. The capture tool now records attribute occurrence counts, safe enum values, and candidate selectors so repeated captures can be compared.
+The schema-v3 evidence confirms useful presence selectors for conversation rows, thread titles, user-message bubbles, assistant messages, app-shell regions, and composer regions. State attributes such as `data-state`, `data-size`, `data-variant`, and `data-color` are common enough that they should refine a semantic selector rather than act as the selector on their own.
+
+We still need to learn which of these attributes remain stable across navigation, reloads, account states, and ChatGPT releases. Repeated captures should compare occurrence counts and selector presence rather than class values.
 
 ### ChatGPT companion persistence
 

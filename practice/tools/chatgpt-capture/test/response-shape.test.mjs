@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   classifyResponseShapeRequest,
+  createResponseShapeFailure,
   createResponseShapeRecord,
   describeJsonShape,
   mergeJsonShapes,
@@ -71,4 +72,22 @@ test("aggregates repeated response captures by endpoint kind", () => {
   assert.equal(merged.minBodyBytes, 100);
   assert.equal(merged.maxBodyBytes, 180);
   assert.equal(merged.shape.fields.items.shape.items.fields.title.optional, true);
+});
+
+
+test("response-shape failures keep only safe diagnostic metadata", () => {
+  const failure = createResponseShapeFailure(
+    { kind: "conversation-window", route: "/backend-api/conversations/:id" },
+    { status: 200, content: { mimeType: "application/json", size: 13_663_917 } },
+    "parse-json-failed",
+  );
+
+  assert.deepEqual(failure, {
+    kind: "conversation-window",
+    route: "/backend-api/conversations/:id",
+    reason: "parse-json-failed",
+    status: 200,
+    mimeType: "application/json",
+    declaredBodyBytes: 13_663_917,
+  });
 });

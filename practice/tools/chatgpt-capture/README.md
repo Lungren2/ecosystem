@@ -108,3 +108,18 @@ node --test practice/tools/chatgpt-capture/test/capture-core.test.mjs
 ```
 
 The first implementation is intentionally evidence-only. It does not archive, delete, export real conversation content, inject controls into chatgpt.com, or call private ChatGPT endpoints.
+
+
+## Evidence learned from schema v3
+
+The first schema-v3 response-shape run confirmed:
+
+- `/backend-api/conversations` returns `items`, `total`, `limit`, and `offset`; sampled pages contained at most 20 items.
+- conversation summaries include `id`, `title`, `create_time`, `update_time`, archive state, star state, and several compatibility fields;
+- `/backend-api/conversations/:id/messages` returns `messages` plus cursor-based `page_info`;
+- a request for ten turns may still contain hundreds of internal message records because tool, reasoning, citation, and connector records are included;
+- the direct conversation-window body still needs diagnosis.
+
+The same run produced a useful styling inventory while keeping class values redacted. Presence selectors for thread titles, interactive conversation rows, user-message bubbles, assistant messages, app-shell regions, and composer regions are now better candidates than generated class names.
+
+Response-shape failures now include only the failure stage, HTTP status, MIME type, and declared body size. They never include response text.

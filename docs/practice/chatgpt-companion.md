@@ -105,7 +105,13 @@ DOM values are preserved only for allowlisted structural or styling attributes w
 
 The capture also inventories styling targets separately from the sanitized HTML. The first useful candidates observed in the current ChatGPT DOM include `[data-thread-title]`, `[data-thread-title-trigger]`, `[data-interactive-row-link]`, `[data-user-message-bubble]`, `[data-conversation-role]`, `[data-state]`, `[data-variant]`, `[data-size]`, `[data-color]`, `[data-appearance]`, the `data-app-shell-*` family, and the `data-composer-*` family.
 
-Prefer these semantic and state attributes over generated class names when we need to target existing ChatGPT UI. Attribute presence is safer than depending on a value unless the value is a constrained UI enum observed repeatedly. The complete capture still requires inspection before sharing.
+Prefer these semantic and state attributes over generated class names when we need to target existing ChatGPT UI. Attribute presence is safer than depending on a value unless the value is a constrained UI enum observed repeatedly.
+
+The schema-v3 capture recorded 156 distinct non-sensitive data-attribute names, 158 candidate data-attribute selectors, and 50 standard semantic selectors. High-value examples were `a[data-interactive-row-link]`, `div[data-thread-title-trigger]`, `span[data-thread-title]`, `div[data-user-message-bubble]`, `h4[data-conversation-role="assistant"]`, and the composer layout attributes. Component-state attributes were widespread: `data-state` appeared 149 times, while `data-size`, `data-variant`, and `data-color` each appeared around 70 times.
+
+Use thread, message, app-shell, and composer presence attributes to identify regions. Use `data-state`, `data-variant`, `data-size`, and `data-color` only to refine styling inside a region. They are too common to identify a feature by themselves.
+
+The complete capture still requires inspection before sharing.
 
 Initial flow captures should answer one question each:
 
@@ -135,7 +141,50 @@ A sanitized schema-v2 capture from 2026-10-05 confirmed several current chatgpt.
 - Archiving a conversation was observed as `PATCH /backend-api/conversation/:id` with JSON containing `{"is_archived": true}`.
 - Deleting a conversation was observed as a successful `DELETE` against a conversation-specific endpoint.
 
-The schema-v2 capture did not establish the conversation-list record schema, title and timestamp fields, complete message graph shape, attachment representation, or response-side pagination metadata. Schema-v3 response-shape mode is intended to answer those questions without retaining response string values.
+A schema-v3 capture from 2026-10-05 established enough response structure to define the first read contracts.
+
+The conversation list response is an object with `items`, `total`, `limit`, and `offset`. Each sampled item contains `id`, `title`, `create_time`, `update_time`, `is_archived`, nullable `is_starred`, nullable `gizmo_id`, temporary-chat and memory flags, plus several compatibility fields that may be null. The observed page contained at most 20 items, matching the request limit.
+
+The older-message response is an object with `messages`, `safe_urls`, `blocked_urls`, and `page_info`. `page_info` contains `start_cursor`, `end_cursor`, `has_previous_page`, and `has_next_page`. Message records contain identifiers, author, numeric timestamps, content, status, end-turn state, metadata, recipient, and channel.
+
+One important detail is that `num_turns=10` does not imply ten message objects. Two captured message pages contained 819 and 1,104 internal message records. Tool activity, reasoning records, citations, connector metadata, and other internal records can all appear in the message array. The adapter must not treat one response item as one visible user or assistant turn.
+
+The content object is polymorphic. Sampled messages used fields such as `parts`, `thoughts`, `content`, `text`, and `source_analysis_msg_id`. Message metadata also contained model information, citation and content-reference fields, invoked-resource data, reasoning metadata, and tool-related fields. Export code should normalize visible conversation content deliberately instead of serializing every internal message as if it were user-facing text.
+
+The direct `GET /backend-api/conversations/:id` response did not yield a shape in this run. Four attempts failed inside the DevTools response-content path even though the network metadata showed successful JSON responses. The capture tool now records failure stage, status, MIME type, and declared body size so a later run can distinguish read, decode, parse, and shape-reduction failures.
+
+These findings are enough to define provisional read models:
+
+```ts
+type ConversationListPage = {
+  items: ConversationSummary[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+type ConversationSummary = {
+  id: string;
+  title: string;
+  create_time: string;
+  update_time: string;
+  is_archived: boolean;
+  is_starred: boolean | null;
+  gizmo_id: string | null;
+};
+
+type ConversationMessagePage = {
+  messages: ConversationMessage[];
+  page_info: {
+    start_cursor: string;
+    end_cursor: string;
+    has_previous_page: boolean;
+    has_next_page: boolean;
+  };
+};
+```
+
+These types intentionally omit fields that the first product slice does not need. Keep raw compatibility parsing separate from the stable local index and export models.
 
 The same capture also showed why DOM evidence needs separate privacy rules. Message content was redacted, but external link destinations embedded in rendered messages still identified unrelated repositories. The capture tool now redacts external DOM URLs and preserves only sanitized chatgpt.com destinations.
 
