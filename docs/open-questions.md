@@ -132,6 +132,47 @@ Local session facts must stay separate from generalized behavior.
 
 ## Practice
 
+### ChatGPT conversation acquisition
+
+The Chrome extension needs enough conversation metadata and content to index, export, archive, delete, and navigate chats.
+
+Sanitized browser evidence now confirms that current chatgpt.com conversation listing uses an offset-based `GET /backend-api/conversations` request with a 20-item limit and updated-time ordering. Conversation reads use bounded turn batches, with older messages fetched through a `before` message cursor. Archive and delete also have observable conversation-specific write requests.
+
+The schema-v3 evidence now gives us the conversation list fields, offset metadata, message-page cursor metadata, and the broad message record structure. It also shows that a ten-turn request can contain hundreds of internal message records, so visible-turn normalization remains a product concern rather than a direct one-to-one mapping.
+
+The remaining read questions are attachment representation and which message/content variants should appear in user-facing export. A later schema-v3 capture successfully reduced the direct `GET /backend-api/conversations/:id` response, so that DevTools read failure is no longer an open question.
+
+We still need to decide whether the production extension should call these private request paths directly or obtain equivalent data through a less brittle mechanism.
+
+Do not spread DOM selectors, private request formats, or internal route assumptions through product code.
+
+### ChatGPT styling targets
+
+The sanitized DOM shows useful semantic and state attributes even though class values remain redacted. Candidate families include thread and message markers, `data-app-shell-*`, `data-composer-*`, and constrained state attributes such as `data-state`, `data-variant`, `data-size`, and `data-appearance`.
+
+The schema-v3 evidence confirms useful presence selectors for conversation rows, thread titles, user-message bubbles, assistant messages, app-shell regions, and composer regions. State attributes such as `data-state`, `data-size`, `data-variant`, and `data-color` are common enough that they should refine a semantic selector rather than act as the selector on their own.
+
+We still need to learn which of these attributes remain stable across navigation, reloads, account states, and ChatGPT releases. Repeated captures should compare occurrence counts and selector presence rather than class values.
+
+### ChatGPT companion persistence
+
+We still need to choose the local store for conversation index entries, bookmarks, archive-rule history, and compatibility metadata.
+
+The index must remain rebuildable. Browser-local state should not become a second authoritative copy of ChatGPT conversations.
+
+### Auto archive policy
+
+The first rule direction is inactivity-based archive with bookmark exceptions.
+
+We still need to decide the default inactivity period, whether actions run automatically or begin in proposal mode, how users review prior auto-archive actions, and how failures retry.
+
+Automatic deletion is out of scope.
+
+### Split-conversation fallback
+
+Chrome documents programmatic Split View creation for Chrome 155 and later.
+
+We still need a fallback for browsers without that API. The fallback must use real ChatGPT tabs or windows and must not embed cloned ChatGPT application instances.
 
 ### Plugin packaging
 

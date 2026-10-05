@@ -1,0 +1,4 @@
+interface:
+  display_name: "Adopt Established Product"
+  short_description: "Adopt a pinned licensed product implementation"
+  default_prompt: "Use $adopt-established-product to pin and reuse a licensed product implementation for this application structure."

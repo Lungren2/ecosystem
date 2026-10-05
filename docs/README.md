@@ -21,6 +21,7 @@ Do not silently turn an open question into architecture.
 - [Ecosystem interface](./ecosystem/interface.md) records the desktop shell, spatial workplane, messaging model, and keyboard-navigation direction.
 - [Desktop foundation](./ecosystem/desktop.md) records the Code OSS fork, ProjectSession lifecycle, and upstream-workbench policy.
 - [Practice](./practice/README.md) records the shift from the old Agent Context Framework runtime toward an OpenAI-native plugin marketplace with durable teaching and semantic adaptation.
+- [ChatGPT companion](./practice/chatgpt-companion.md) records the Chrome extension and Codex Control MCP split, conversation-management features, and compatibility boundaries.
 - [Interface](./interface/README.md) records the source-owned UI system intended to make model-authored frontend work conform to the product's actual interface language.
 - [Open questions](./open-questions.md) keeps unresolved choices visible without making them accidental contracts.
 

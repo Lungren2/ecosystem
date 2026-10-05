@@ -1,0 +1,4 @@
+interface:
+  display_name: "Optimize Codex Sessions"
+  short_description: "Review completed Codex tasks for avoidable work"
+  default_prompt: "Use $optimize-codex-sessions to review this completed task from session and Git records."
